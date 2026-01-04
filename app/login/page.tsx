@@ -25,10 +25,12 @@ export default function LoginPage() {
         const data = await res.json();
 
         if (data.role === "ADMIN") {
-            router.push("/admin/dashboard");
+            router.push("/dashboard/summary");
         } else {
             router.push("/customer");
         }
+        // Refresh the app state so Navbar updates
+        // window.location.reload()
     };
 
     return (
