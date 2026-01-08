@@ -14,7 +14,7 @@ interface MasterData {
     name: string;
     area: Area;
     paymentMethod: string;
-    bkash: number;
+    phone: number;
     date: string;
     purchaseAmount: number;
     paidAmount: number;
@@ -99,7 +99,7 @@ export default function MasterDataPage() {
                     <th>Due</th>
                     <th>Cashback</th>
                     <th>Action</th>
-                    <th>Delete</th>
+                    <th>Call</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -120,7 +120,18 @@ export default function MasterDataPage() {
                             </button>
                         </td>
                         <td style={{textAlign: "center"}}>
-                            <button onClick={() => deleteItem(d.id)}>❌</button>
+                            {/*<button onClick={() => deleteItem(d.id)}>❌</button>*/}
+                            {/*<button onClick={() => window.location.href = `tel:${d.phone}`}>*/}
+                            <button
+                                onClick={() =>
+                                    fetch(`http://localhost:8080/api/calls/call?phone=${encodeURIComponent(d.phone)}`, {
+                                        method: "POST",
+                                    })
+                                }
+                            >
+                                📞 Call
+                            </button>
+
                         </td>
                         <td>
                             <button

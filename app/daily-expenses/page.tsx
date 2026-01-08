@@ -39,6 +39,9 @@ export default function DailyExpensePage() {
         totalExpense: 0,
         totalPaid: 0
     });
+    const [editRowId, setEditRowId] = useState<number | null>(null);
+    const [editData, setEditData] = useState<Partial<DailyExpense>>({});
+
     const router = useRouter();
 
     const fetchData = async () => {
@@ -66,6 +69,31 @@ export default function DailyExpensePage() {
         try {
             const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
             if (!res.ok) throw new Error("Failed to delete item");
+            fetchData();
+            fetchSummary();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    const updateItem = async (id: number) => {
+        try {
+            const res = await fetch(`${API_URL}/${id}`, { method: "PUT" });
+            if (!res.ok) throw new Error("Failed to Update item");
+            fetchData();
+            fetchSummary();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    const saveEdit = async (id: number) => {
+        try {
+            const res = await fetch(`${API_URL}/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(editData),
+            });
+            if (!res.ok) throw new Error("Failed to update");
+            setEditRowId(null);
             fetchData();
             fetchSummary();
         } catch (err) {
@@ -136,31 +164,144 @@ export default function DailyExpensePage() {
                 </tr>
                 </thead>
                 <tbody>
-                {data.map((exp) => (
-                    <tr key={exp.id}>
-                        <td>{exp.id}</td>
-                        <td>{new Date(exp.date).toLocaleDateString("en-GB")}</td>
-                        <td>{exp.name}</td>
-                        <td>{exp.expenseHead}</td>
-                        <td>{exp.expenseAmount}</td>
-                        <td>{exp.cashIn}</td>
-                        <td>{exp.cashOut}</td>
-                        <td>{exp.runningBalance}</td>
-                        <td>{exp.remarks}</td>
-                        <td>
-                            <button
-                                style={{color: "red"}}
-                                onClick={() => {
-                                    if (confirm("Are you sure you want to delete this expense?")) {
-                                        deleteItem(exp.id);
-                                    }
-                                }}
-                            >
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                ))}
+                {data.map((exp) => {
+                    const isEditing = editRowId === exp.id;
+
+                    return (
+                        <tr key={exp.id}>
+                            <td>{exp.id}</td>
+
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        type="date"
+                                        value={editData.date || ""}
+                                        onChange={e => setEditData({...editData, date: e.target.value})}
+                                    />
+                                ) : (
+                                    new Date(exp.date).toLocaleDateString("en-GB")
+                                )}
+                            </td>
+
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        value={editData.name || ""}
+                                        onChange={e => setEditData({...editData, name: e.target.value})}
+                                    />
+                                ) : (
+                                    exp.name
+                                )}
+                            </td>
+
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        value={editData.expenseHead || ""}
+                                        onChange={e => setEditData({...editData, expenseHead: e.target.value})}
+                                    />
+                                ) : (
+                                    exp.expenseHead
+                                )}
+                            </td>
+
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        type="number"
+                                        value={editData.expenseAmount ?? ""}
+                                        onChange={e =>
+                                            setEditData({...editData, expenseAmount: Number(e.target.value)})
+                                        }
+                                    />
+                                ) : (
+                                    exp.expenseAmount
+                                )}
+                            </td>
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        type="number"
+                                        value={editData.cashIn ?? ""}
+                                        onChange={e =>
+                                            setEditData({...editData, cashIn: Number(e.target.value)})
+                                        }
+                                    />
+                                ) : (
+                                    exp.cashIn
+                                )}
+                            </td>
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        type="number"
+                                        value={editData.cashOut ?? ""}
+                                        onChange={e =>
+                                            setEditData({...editData, cashOut: Number(e.target.value)})
+                                        }
+                                    />
+                                ) : (
+                                    exp.cashOut
+                                )}
+                            </td>
+
+                            {/*<td>{exp.cashIn}</td>*/}
+                            {/*<td>{exp.cashOut}</td>*/}
+                            <td>{exp.runningBalance}</td>
+
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        value={editData.remarks || ""}
+                                        onChange={e => setEditData({...editData, remarks: e.target.value})}
+                                    />
+                                ) : (
+                                    exp.remarks
+                                )}
+                            </td>
+
+                            <td>
+                                {isEditing ? (
+                                    <>
+                                        <button onClick={() => saveEdit(exp.id)}>Save</button>
+                                        <button onClick={() => setEditRowId(null)}>Cancel</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button
+                                            style={{color: "green"}}
+                                            onClick={() => {
+                                                setEditRowId(exp.id);
+                                                setEditData({
+                                                    name: exp.name,
+                                                    expenseHead: exp.expenseHead,
+                                                    expenseAmount: exp.expenseAmount,
+                                                    date: exp.date,
+                                                    remarks: exp.remarks,
+                                                    cashIn: exp.cashIn,
+                                                    cashOut: exp.cashOut,
+                                                });
+                                            }}
+                                        >
+                                            Edit
+                                        </button>
+
+                                        <button
+                                            style={{color: "red", marginLeft: 8}}
+                                            onClick={() => {
+                                                if (confirm("Are you sure you want to delete this expense?")) {
+                                                    deleteItem(exp.id);
+                                                }
+                                            }}
+                                        >
+                                            Delete
+                                        </button>
+                                    </>
+                                )}
+                            </td>
+                        </tr>
+                    );
+                })}
                 </tbody>
             </table>
         </div>
