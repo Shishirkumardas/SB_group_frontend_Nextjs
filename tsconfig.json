@@ -20,7 +20,13 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    }
+    }, // Enable incremental compilation
+    "strictNullChecks": true,                      // Strict null checks
+    "noImplicitAny": true,                         // No implicit any
+    "noUnusedLocals": true,                        // Warn on unused locals
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+
   },
   "include": [
     "next-env.d.ts",

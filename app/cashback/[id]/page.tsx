@@ -10,6 +10,7 @@ interface Payment {
 
 interface CashbackData {
     cashbackStatus: string;
+    purchaseDate:string;
     expectedMonthlyCashbackAmount: number;
     missedCashbackAmount: number;
     missedCashbackCount: number;
@@ -59,17 +60,18 @@ export default function CashbackDetailsPage() {
         d ? new Date(d).toLocaleDateString("en-GB") : "-";
 
     return (
-        <div style={{ padding: 30 }}>
+        <div style={{padding: 30}}>
             <h1>💰 Cashback Details</h1>
 
             <p><b>Status:</b> {data.cashbackStatus}</p>
+            <p><b>Purchase Date:</b> {formatDate(data.purchaseDate)}</p>
             <p><b>Monthly Cashback:</b> {data.expectedMonthlyCashbackAmount}</p>
             <p><b>Missed Amount:</b> {data.missedCashbackAmount}</p>
             <p><b>Missed Months:</b> {data.missedCashbackCount}</p>
             <p><b>Next Due Date:</b> {formatDate(data.nextDueDate)}</p>
 
             <h3>Payment History</h3>
-            <table border={1} cellPadding={6} style={{ borderCollapse: "collapse" }}>
+            <table border={1} cellPadding={6} style={{borderCollapse: "collapse"}}>
                 <thead>
                 <tr>
                     <th>Date</th>
@@ -86,7 +88,7 @@ export default function CashbackDetailsPage() {
                     ))
                 ) : (
                     <tr>
-                        <td colSpan={2} style={{ textAlign: "center" }}>
+                        <td colSpan={2} style={{textAlign: "center"}}>
                             No payments found
                         </td>
                     </tr>
@@ -94,7 +96,7 @@ export default function CashbackDetailsPage() {
                 </tbody>
             </table>
 
-            <br />
+            <br/>
 
             <button onClick={() => router.push(`/cashback/${id}/pay`)}>
                 ➕ Add Cashback Payment

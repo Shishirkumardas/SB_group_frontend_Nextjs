@@ -13,6 +13,8 @@ interface MasterData {
     id: number;
     name: string;
     area: Area;
+    nid: number;
+    phone: number;
     paymentMethod: string;
     phone: number;
     date: string;
@@ -92,54 +94,60 @@ export default function MasterDataPage() {
                     <th>ID</th>
                     <th>Name</th>
                     <th>Area</th>
+                    <th>NID</th>
+                    <th>Phone</th>
                     <th>Payment</th>
                     <th>Date</th>
                     <th>Purchase</th>
-                    <th>Paid</th>
-                    <th>Due</th>
-                    <th>Cashback</th>
-                    <th>Action</th>
-                    <th>Call</th>
+                    {/*<th>Paid</th>*/}
+                    <th>Cashback Due</th>
+                    {/*<th style={{textAlign: "center"}}>Cashback</th>*/}
+                    {/*<th>Action</th>*/}
+                    {/*<th>Call</th>*/}
+                    {/*<th>Delete</th>*/}
                 </tr>
                 </thead>
                 <tbody>
                 {data.map((d) => (
                     <tr key={d.id}>
                         <td>{d.id}</td>
-                        <td>{d.name}</td>
-                        <td>{d.area?.name || "-"}</td>
-                        <td>{d.paymentMethod}</td>
-                        <td>{renderDate(d.date)}</td>
-                        <td style={{textAlign: "right"}}>{d.purchaseAmount}</td>
-                        <td style={{textAlign: "right"}}>{d.paidAmount}</td>
-                        <td style={{textAlign: "right"}}>{d.dueAmount}</td>
-                        <td style={{textAlign: "right"}}>{d.cashBackAmount}</td>
-                        <td>
+                        <td style={{textAlign: "center"}}>{d.name}</td>
+                        <td style={{textAlign: "center"}}>{d.area?.name || "-"}</td>
+                        <td style={{textAlign: "center"}}>{d.nid}</td>
+                        <td style={{textAlign: "center"}}>{d.phone}</td>
+                        <td style={{textAlign: "center"}}>{d.paymentMethod}</td>
+                        <td style={{textAlign: "center"}}>{renderDate(d.date)}</td>
+                        {/*<td style={{textAlign: "right"}}>{d.paidAmount}</td>*/}
+                        {/*<td style={{textAlign: "right"}}>{d.paidAmount}</td>*/}
+                        <td style={{textAlign: "center"}}>{d.purchaseAmount}</td>
+                        <td style={{textAlign: "center"}}>{d.dueAmount}</td>
+                        <td style={{textAlign: "center"}}>{d.cashBackAmount}</td>
+                        <td style={{textAlign: "center"}}>
                             <button onClick={() => router.push(`/cashback/${d.id}`)}>
                                 💰 Cashback Details
                             </button>
                         </td>
-                        <td style={{textAlign: "center"}}>
-                            {/*<button onClick={() => deleteItem(d.id)}>❌</button>*/}
-                            {/*<button onClick={() => window.location.href = `tel:${d.phone}`}>*/}
-                            <button
-                                onClick={() =>
-                                    fetch(`http://localhost:8080/api/calls/call?phone=${encodeURIComponent(d.phone)}`, {
-                                        method: "POST",
-                                    })
-                                }
-                            >
-                                📞 Call
-                            </button>
+                        {/*<td style={{textAlign: "center"}}>*/}
+                        {/*    <button onClick={() => deleteItem(d.id)}>❌</button>*/}
+                        {/*    /!*<button onClick={() => window.location.href = `tel:${d.phone}`}>*!/*/}
+                        {/*    /!*<button*!/*/}
+                        {/*    /!*    onClick={() =>*!/*/}
+                        {/*    /!*        fetch(`http://localhost:8080/api/calls/call?phone=${encodeURIComponent(d.phone)}`, {*!/*/}
+                        {/*    /!*            method: "POST",*!/*/}
+                        {/*    /!*        })*!/*/}
+                        {/*    /!*    }*!/*/}
+                        {/*    /!*>*!/*/}
+                        {/*    /!*    📞 Call*!/*/}
+                        {/*    /!*</button>*!/*/}
 
-                        </td>
-                        <td>
-                            <button
-                                onClick={() => router.push(`/master-data/${d.id}/pay`)}
-                            >
-                                💳 Payment
-                            </button>
-                        </td>
+                        {/*</td>*/}
+                        {/*<td>*/}
+                        {/*    <button*/}
+                        {/*        onClick={() => router.push(`/master-data/${d.id}/pay`)}*/}
+                        {/*    >*/}
+                        {/*        💳 Payment*/}
+                        {/*    </button>*/}
+                        {/*</td>*/}
                     </tr>
                 ))}
                 </tbody>
