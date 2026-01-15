@@ -120,6 +120,12 @@ export default function Navbar() {
                             >
                                 Dashboard
                             </Link>
+                            <Link
+                                href="/area-daily-summary"
+                                className="text-emerald-100 hover:text-emerald-300 font-medium transition-all duration-300 hover:scale-105 hover:underline underline-offset-4"
+                            >
+                                Daily Summary
+                            </Link>
                         </div>
                     {/*)}*/}
 

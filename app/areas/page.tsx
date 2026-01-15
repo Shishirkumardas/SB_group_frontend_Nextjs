@@ -9,6 +9,8 @@ interface Area {
     purchaseAmount: string;
     paidAmount: string;
     dueAmount: string;
+    CashbackAmount:string;
+    PackageQuantity: string;
 }
 
 export default function AreasPage() {
@@ -83,14 +85,17 @@ export default function AreasPage() {
                                     Name
                                 </th>
                                 <th className="w-48 px-6 py-5 text-right text-sm font-semibold text-white uppercase tracking-wider">
-                                    Purchase
+                                    Package Quantity
                                 </th>
                                 <th className="w-48 px-6 py-5 text-right text-sm font-semibold text-white uppercase tracking-wider">
-                                    Paid
+                                    Purchase Amount
                                 </th>
                                 <th className="w-48 px-6 py-5 text-right text-sm font-semibold text-white uppercase tracking-wider">
-                                    Due
+                                    Cashback Amount
                                 </th>
+                                {/*<th className="w-48 px-6 py-5 text-right text-sm font-semibold text-white uppercase tracking-wider">*/}
+                                {/*    Due Amount*/}
+                                {/*</th>*/}
                                 <th className="w-40 px-6 py-5 text-center text-sm font-semibold text-white uppercase tracking-wider">
                                     Action
                                 </th>
@@ -117,14 +122,17 @@ export default function AreasPage() {
                                             {area.name}
                                         </td>
                                         <td className="px-6 py-5 whitespace-nowrap text-sm text-right font-medium text-emerald-700">
+                                            {Number(area.PackageQuantity).toLocaleString()}
+                                        </td>
+                                        <td className="px-6 py-5 whitespace-nowrap text-sm text-right font-medium text-emerald-700">
                                             {Number(area.purchaseAmount).toLocaleString()}
                                         </td>
                                         <td className="px-6 py-5 whitespace-nowrap text-sm text-right font-medium text-emerald-700">
-                                            {Number(area.paidAmount).toLocaleString()}
+                                            {Number(area.CashbackAmount).toLocaleString()}
                                         </td>
-                                        <td className="px-6 py-5 whitespace-nowrap text-sm text-right font-medium text-amber-700">
-                                            {Number(area.dueAmount).toLocaleString()}
-                                        </td>
+                                        {/*<td className="px-6 py-5 whitespace-nowrap text-sm text-right font-medium text-amber-700">*/}
+                                        {/*    {Number(area.dueAmount).toLocaleString()}*/}
+                                        {/*</td>*/}
                                         <td className="px-6 py-5 whitespace-nowrap text-center">
                                             <button
                                                 onClick={() => deleteArea(area.id)}

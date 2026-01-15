@@ -25,21 +25,31 @@ interface MasterData {
 
 export default function MasterDataPage() {
     const [data, setData] = useState<MasterData[]>([]);
+    const [filteredData, setFilteredData] = useState<MasterData[]>([]);
+    const [selectedDate, setSelectedDate] = useState<string>(""); // empty = all dates
+    const [loading, setLoading] = useState<boolean>(false); // ← FIXED: Added this!
     const API_URL = "http://localhost:8080/api/master-data";
     const router = useRouter();
 
     const fetchData = async () => {
+        setLoading(true);
         try {
             const res = await fetch(API_URL, { credentials: "include" });
             if (!res.ok) throw new Error("Failed to fetch data");
             const json = await res.json();
             setData(json);
+            setFilteredData(json); // initially show all
         } catch (err) {
             console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
     const deleteItem = async (id: number) => {
+        if (!confirm("Are you sure you want to delete this record?")) return;
+
+        setLoading(true);
         try {
             const res = await fetch(`${API_URL}/${id}`, {
                 method: "DELETE",
@@ -49,12 +59,28 @@ export default function MasterDataPage() {
             fetchData();
         } catch (err) {
             console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
+    // Fetch all data once on mount
     useEffect(() => {
         fetchData();
     }, []);
+
+    // Filter data when selectedDate or data changes
+    useEffect(() => {
+        if (!selectedDate) {
+            setFilteredData(data);
+        } else {
+            const filtered = data.filter((item) => {
+                const itemDate = item.date.split("T")[0]; // YYYY-MM-DD
+                return itemDate === selectedDate;
+            });
+            setFilteredData(filtered);
+        }
+    }, [selectedDate, data]);
 
     const parseAndFormatDate = (dateString: string | undefined): string => {
         if (!dateString) return "—";
@@ -77,9 +103,35 @@ export default function MasterDataPage() {
                     </p>
                 </div>
 
-                {/* Form */}
-                <div className="mb-12">
-                    <MasterDataForm onSuccess={fetchData} />
+                {/* Filter + Form Section */}
+                <div className="bg-white rounded-3xl shadow-2xl border border-emerald-100 p-8 mb-12">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                        {/* Date Filter */}
+                        <div className="flex items-center gap-4">
+                            <label className="font-medium text-gray-700 whitespace-nowrap">
+                                Filter by Date:
+                            </label>
+                            <input
+                                type="date"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
+                                className="border border-emerald-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
+                            />
+                            {selectedDate && (
+                                <button
+                                    onClick={() => setSelectedDate("")}
+                                    className="text-sm text-emerald-600 hover:text-emerald-800 underline"
+                                >
+                                    Clear Filter
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Master Data Form */}
+                        <div className="w-full md:w-auto">
+                            <MasterDataForm onSuccess={fetchData} />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Wide Table Container */}
@@ -122,14 +174,20 @@ export default function MasterDataPage() {
                             </thead>
 
                             <tbody className="bg-white divide-y divide-emerald-50">
-                            {data.length === 0 ? (
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={10} className="px-6 py-16 text-center text-gray-500 text-lg font-medium animate-pulse">
+                                        Loading records...
+                                    </td>
+                                </tr>
+                            ) : filteredData.length === 0 ? (
                                 <tr>
                                     <td colSpan={10} className="px-6 py-16 text-center text-gray-500 text-lg font-medium">
-                                        No records found
+                                        No records found {selectedDate ? `for ${selectedDate}` : ""}
                                     </td>
                                 </tr>
                             ) : (
-                                data.map((d) => {
+                                filteredData.map((d) => {
                                     const phoneStr = String(d.phone ?? "");
 
                                     return (
