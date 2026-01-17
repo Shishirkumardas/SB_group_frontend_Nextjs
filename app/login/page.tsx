@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link"; // ← THIS WAS MISSING – now fixed!
+import Link from "next/link";
+import { useAuth } from "@/components/AuthContext";
 
 export default function LoginPage() {
     const router = useRouter();
+    const { refreshAuth } = useAuth(); // ✅ Get refreshAuth from context
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -18,25 +20,32 @@ export default function LoginPage() {
         try {
             const res = await fetch("http://localhost:8080/api/auth/login", {
                 method: "POST",
-                credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                credentials: "include", // 🔥 important for cookie
+                body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
             });
 
             if (!res.ok) {
-                setError("Invalid email or password");
+                const err = await res.json().catch(() => ({}));
+                setError(err.error || "Invalid email or password");
                 return;
             }
 
             const data = await res.json();
 
+            // 🔥 Refresh auth context so Navbar updates immediately
+            await refreshAuth();
+
+            // Redirect based on role
             if (data.role === "ADMIN") {
                 router.push("/dashboard/summary");
             } else {
                 router.push("/customer");
             }
-        } catch {
-            setError("Something went wrong. Please try again.");
+
+            router.refresh();
+        } catch (err) {
+            setError("Connection error. Please try again.");
         } finally {
             setLoading(false);
         }

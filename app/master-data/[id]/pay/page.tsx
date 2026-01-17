@@ -8,6 +8,7 @@ export default function MasterDataPaymentPage() {
     const [paymentMethod, setPaymentMethod] = useState("BKASH");
     // const date = new Date().toISOString().split("T")[0];
     const [date, setDate] = useState("");
+    const [mounted, setMounted] = useState(false);
 
     const [amount, setAmount] = useState("");
     const [paymentDate, setPaymentDate] = useState(date);

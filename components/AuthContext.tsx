@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 type Role = "ADMIN" | "CUSTOMER" | null;
 
@@ -8,53 +8,53 @@ interface AuthContextType {
     role: Role;
     isLoading: boolean;
     refreshAuth: () => void;
+    setRole: (role: Role) => void;
 }
 
-const AuthContext = createContext<AuthContextType>({
-    role: null,
-    isLoading: true,
-    refreshAuth: () => {},
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-    const [role, setRole] = useState<Role>(null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    // const [role, setRole] = useState<Role>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [counter, setCounter] = useState(0);
 
-    const refreshAuth = () => setCounter(prev => prev + 1);
+    const [role, setRole] = useState<"ADMIN" | "CUSTOMER" | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    const refreshAuth = async () => {
+        setIsLoading(true);
+        try {
+            const res = await fetch("http://localhost:8080/api/auth/me", {
+                method: "GET",
+                credentials: "include",
+                cache: "no-store",
+            });
+            if (!res.ok) {
+                setRole(null);
+                return;
+            }
+            const data = await res.json();
+            setRole(data?.role?.toUpperCase() ?? null);
+        } catch {
+            setRole(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const checkUser = async () => {
-            try {
-                // Assuming your token is in a cookie, your backend /me
-                // should check that cookie or the Authorization header
-                const res = await fetch("http://localhost:8080/api/auth/me", {
-                    headers: {
-                        // If you need to manually pass the token:
-                        Authorization: `Bearer ${document.cookie.split('token=')[1]?.split(';')[0]}`
-                    }
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    setRole(data.role);
-                } else {
-                    setRole(null);
-                }
-            } catch (err) {
-                setRole(null);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        checkUser();
-    }, [counter]);
+        refreshAuth();
+    }, []);
 
     return (
-        <AuthContext.Provider value={{ role, isLoading, refreshAuth }}>
+        <AuthContext.Provider value={{ role, isLoading, refreshAuth, setRole }}>
             {children}
         </AuthContext.Provider>
     );
-}
+};
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) throw new Error("useAuth must be used within AuthProvider");
+    return context;
+};

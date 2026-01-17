@@ -6,17 +6,18 @@ export const metadata = {
     description: "SB Group Web App",
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: {
-    children: React.ReactNode;
-}) {
+import { AuthProvider } from "@/components/AuthContext";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html>
         <body>
-        <Navbar />
-        {children}
+        <AuthProvider>
+            <Navbar />
+            {children}
+        </AuthProvider>
         </body>
         </html>
     );
 }
+

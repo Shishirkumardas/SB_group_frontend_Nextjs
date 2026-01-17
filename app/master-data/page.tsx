@@ -30,6 +30,8 @@ export default function MasterDataPage() {
     const [loading, setLoading] = useState<boolean>(false); // ← FIXED: Added this!
     const API_URL = "http://localhost:8080/api/master-data";
     const router = useRouter();
+    const [mounted, setMounted] = useState(false);
+
 
     const fetchData = async () => {
         setLoading(true);
@@ -64,6 +66,11 @@ export default function MasterDataPage() {
         }
     };
 
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+
     // Fetch all data once on mount
     useEffect(() => {
         fetchData();
@@ -89,6 +96,8 @@ export default function MasterDataPage() {
             ? "—"
             : date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
     };
+
+    if (!mounted) return null;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-10 px-4 sm:px-6 lg:px-8">

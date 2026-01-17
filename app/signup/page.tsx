@@ -10,30 +10,65 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const login = async () => {
+    // const login = async () => {
+    //     setError("");
+    //     setLoading(true);
+    //
+    //     try {
+    //         const res = await fetch("http://localhost:8080/api/auth/signup", {
+    //             method: "POST",
+    //             credentials: "include",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ email, password }),
+    //         });
+    //
+    //         if (!res.ok) {
+    //             setError("Invalid email or password");
+    //             return;
+    //         }
+    //
+    //         const data = await res.json();
+    //
+    //         if (data.role === "ADMIN") {
+    //             router.push("/dashboard/summary");
+    //         } else {
+    //             router.push("/customer");
+    //         }
+    //     } catch {
+    //         setError("Something went wrong. Please try again.");
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    // Signup function – improved UX even without backend changes
+
+    // ... other imports and UI stay the same ...
+
+    const signup = async () => {
         setError("");
         setLoading(true);
 
         try {
-            const res = await fetch("http://localhost:8080/api/auth/login", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-            });
+            const payload = { email, password };
+            // Uncomment next line ONLY if you want to allow admin registration from frontend
+            // payload.role = "ROLE_ADMIN";   // ← be careful!
 
-            if (!res.ok) {
-                setError("Invalid email or password");
-                return;
-            }
+            const res = await fetch("http://localhost:8080/api/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
 
             const data = await res.json();
 
-            if (data.role === "ADMIN") {
-                router.push("/dashboard/summary");
-            } else {
-                router.push("/customer");
+            if (!res.ok) {
+                setError(data.error || "Registration failed");
+                return;
             }
+
+            // Success → redirect to login (since no auto-login)
+            alert("Account created! Please sign in.");
+            router.push("/login");
         } catch {
             setError("Something went wrong. Please try again.");
         } finally {
@@ -49,10 +84,10 @@ export default function LoginPage() {
                     {/* Header */}
                     <div className="bg-gradient-to-r from-emerald-700 to-teal-700 text-white px-10 py-12 text-center">
                         <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-                            Welcome Back
+                            Create a new account
                         </h1>
                         <p className="mt-3 text-emerald-100/90 text-lg">
-                            Sign in to your account
+                            create account
                         </p>
                     </div>
 
@@ -94,7 +129,7 @@ export default function LoginPage() {
 
                         {/* Submit Button */}
                         <button
-                            onClick={login}
+                            onClick={signup}
                             disabled={loading}
                             className={`w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-4 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
                                 loading ? "opacity-70 cursor-not-allowed" : ""

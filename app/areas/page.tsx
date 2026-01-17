@@ -16,6 +16,8 @@ interface Area {
 export default function AreasPage() {
     const [areas, setAreas] = useState<Area[]>([]);
     const API_URL = "http://localhost:8080/api/areas";
+    const [mounted, setMounted] = useState(false);
+
 
     const fetchAreas = async () => {
         try {
@@ -51,8 +53,16 @@ export default function AreasPage() {
     };
 
     useEffect(() => {
+        setMounted(true);
+    }, []);
+
+
+    useEffect(() => {
         fetchAreas();
     }, []);
+
+    if (!mounted) return null;
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-10 px-4 sm:px-6 lg:px-8">
