@@ -1,5 +1,7 @@
+
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+
+import Navbar from "@/context/Navbar";
 
 export const metadata = {
     title: "SB Group",
@@ -8,9 +10,10 @@ export const metadata = {
 
 import { AuthProvider } from "@/components/AuthContext";
 
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html>
+        <html lang="en" suppressHydrationWarning>
         <body>
         <AuthProvider>
             <Navbar />

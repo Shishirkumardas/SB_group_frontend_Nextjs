@@ -9,6 +9,9 @@ interface AuthContextType {
     isLoading: boolean;
     refreshAuth: () => void;
     setRole: (role: Role) => void;
+    userId: string | null;
+    userPhone: string|null;
+    userAddress: string|null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,6 +23,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [role, setRole] = useState<"ADMIN" | "CUSTOMER" | null>(null);
     const [email, setEmail] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const [userId, setUserId] = useState<string | null>(null);
+    const [userPhone, setUserPhone] = useState<string | null>(null);
+    const [userAddress, setUserAddress] = useState<string | null>(null);
 
     const refreshAuth = async () => {
         setIsLoading(true);
@@ -29,17 +35,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 credentials: "include",
                 cache: "no-store",
             });
+            console.log("refreshAuth status:", res.status); // ← debug
             if (!res.ok) {
                 setRole(null);
                 return;
             }
             const data = await res.json();
             setRole(data?.role?.toUpperCase() ?? null);
+            setUserId(data?.id ?? null);
+            setUserPhone(data?.phone ?? null);
+            setUserAddress(data?.address ?? null);
         } catch {
             setRole(null);
         } finally {
             setIsLoading(false);
         }
+
     };
 
     useEffect(() => {
@@ -47,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ role, isLoading, refreshAuth, setRole }}>
+        <AuthContext.Provider value={{ role, isLoading, refreshAuth, setRole, userId,userPhone,userAddress }}>
             {children}
         </AuthContext.Provider>
     );

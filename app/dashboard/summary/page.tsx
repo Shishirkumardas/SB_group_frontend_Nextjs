@@ -173,74 +173,74 @@ export default function Dashboard() {
                     />
                 </div>
 
-                {/* Charts Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* Bar Chart */}
-                    <div className="bg-white rounded-2xl shadow-xl border border-emerald-100 p-6">
-                        <h2 className="text-xl font-bold text-emerald-800 mb-6">
-                            Financial Overview
-                        </h2>
+                {/*/!* Charts Grid *!/*/}
+                {/*<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">*/}
+                {/*    /!* Bar Chart *!/*/}
+                {/*    <div className="bg-white rounded-2xl shadow-xl border border-emerald-100 p-6">*/}
+                {/*        <h2 className="text-xl font-bold text-emerald-800 mb-6">*/}
+                {/*            Financial Overview*/}
+                {/*        </h2>*/}
 
-                        <div className="h-[400px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart
-                                    data={summaryData}
-                                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                                    <XAxis dataKey="name" stroke="#6b7280" />
-                                    <YAxis stroke="#6b7280" />
-                                    <Tooltip
-                                        formatter={(value) => `৳${Number(value).toLocaleString()}`}
-                                    />
-                                    <Legend />
-                                    <Bar
-                                        dataKey="value"
-                                        fill="#10b981"
-                                        name="Amount (৳)"
-                                        radius={[8, 8, 0, 0]}
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
+                {/*        <div className="h-[400px]">*/}
+                {/*            <ResponsiveContainer width="100%" height="100%">*/}
+                {/*                <BarChart*/}
+                {/*                    data={summaryData}*/}
+                {/*                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}*/}
+                {/*                >*/}
+                {/*                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />*/}
+                {/*                    <XAxis dataKey="name" stroke="#6b7280" />*/}
+                {/*                    <YAxis stroke="#6b7280" />*/}
+                {/*                    <Tooltip*/}
+                {/*                        formatter={(value) => `৳${Number(value).toLocaleString()}`}*/}
+                {/*                    />*/}
+                {/*                    <Legend />*/}
+                {/*                    <Bar*/}
+                {/*                        dataKey="value"*/}
+                {/*                        fill="#10b981"*/}
+                {/*                        name="Amount (৳)"*/}
+                {/*                        radius={[8, 8, 0, 0]}*/}
+                {/*                    />*/}
+                {/*                </BarChart>*/}
+                {/*            </ResponsiveContainer>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
 
-                    {/* Pie Chart */}
-                    <div className="bg-white rounded-2xl shadow-xl border border-emerald-100 p-6">
-                        <h2 className="text-xl font-bold text-emerald-800 mb-6">
-                            Paid vs Due
-                        </h2>
+                {/*    /!* Pie Chart *!/*/}
+                {/*    <div className="bg-white rounded-2xl shadow-xl border border-emerald-100 p-6">*/}
+                {/*        <h2 className="text-xl font-bold text-emerald-800 mb-6">*/}
+                {/*            Paid vs Due*/}
+                {/*        </h2>*/}
 
-                        <div className="h-[400px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={pieData}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={70}
-                                        outerRadius={110}
-                                        dataKey="value"
-                                        label={({ name, percent }) =>
-                                            `${name} ${(percent * 100).toFixed(0)}%`
-                                        }
-                                    >
-                                        {pieData.map((entry, index) => (
-                                            <Cell
-                                                key={`cell-${index}`}
-                                                fill={COLORS[index % COLORS.length]}
-                                            />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip
-                                        formatter={(value) => `৳${Number(value).toLocaleString()}`}
-                                    />
-                                    <Legend />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-                </div>
+                {/*        <div className="h-[400px]">*/}
+                {/*            <ResponsiveContainer width="100%" height="100%">*/}
+                {/*                <PieChart>*/}
+                {/*                    <Pie*/}
+                {/*                        data={pieData}*/}
+                {/*                        cx="50%"*/}
+                {/*                        cy="50%"*/}
+                {/*                        innerRadius={70}*/}
+                {/*                        outerRadius={110}*/}
+                {/*                        dataKey="value"*/}
+                {/*                        label={({ name, percent }) =>*/}
+                {/*                            `${name} ${(percent * 100).toFixed(0)}%`*/}
+                {/*                        }*/}
+                {/*                    >*/}
+                {/*                        {pieData.map((entry, index) => (*/}
+                {/*                            <Cell*/}
+                {/*                                key={`cell-${index}`}*/}
+                {/*                                fill={COLORS[index % COLORS.length]}*/}
+                {/*                            />*/}
+                {/*                        ))}*/}
+                {/*                    </Pie>*/}
+                {/*                    <Tooltip*/}
+                {/*                        formatter={(value) => `৳${Number(value).toLocaleString()}`}*/}
+                {/*                    />*/}
+                {/*                    <Legend />*/}
+                {/*                </PieChart>*/}
+                {/*            </ResponsiveContainer>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 {/* Extra Stats */}
                 <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

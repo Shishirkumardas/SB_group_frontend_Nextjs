@@ -1,14 +1,21 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import {useEffect, useState} from "react";
 
 export default function CustomerPage() {
     const router = useRouter();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
 
     const handleNewCustomer = () => {
         const id = crypto.randomUUID();
         router.push(`/customer/${id}`);
     };
+    if (!mounted) return null;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center">

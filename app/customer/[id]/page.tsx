@@ -8,6 +8,8 @@ export default function CustomerFormPage() {
 
     const [areas, setAreas] = useState<any[]>([]);
     const [methods, setMethods] = useState<string[]>([]);
+    const [mounted, setMounted] = useState(false);
+
 
     const [form, setForm] = useState({
         customerName: "",
@@ -18,6 +20,11 @@ export default function CustomerFormPage() {
         paymentDate: "",
         paymentMethod: "",
     });
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
 
     useEffect(() => {
         fetch("http://localhost:8080/api/areas")
@@ -60,6 +67,9 @@ export default function CustomerFormPage() {
             alert("Failed to submit customer data");
         }
     };
+
+    if (!mounted) return null;
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
