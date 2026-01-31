@@ -1,73 +1,70 @@
 "use client";
 
 import { useRef, useState } from "react";
-import axios, { AxiosProgressEvent } from "axios";
+import axios from "axios";
+import { Upload, Loader2, CheckCircle, AlertCircle, File } from "lucide-react";
 
 const API_ROOT = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
 export default function ExcelUploadPage() {
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [progress, setProgress] = useState<number>(0);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [message, setMessage] = useState<string>("");
-    const [selectedFileName, setSelectedFileName] = useState<string>("");
+    const [isUploading, setIsUploading] = useState<boolean>(false);
+    const [message, setMessage] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
 
-    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         if (!file.name.toLowerCase().endsWith(".xlsx")) {
-            setMessage("Only .xlsx files are allowed");
+            setMessage({ text: "Only .xlsx files are allowed", type: "error" });
+            setSelectedFile(null);
             return;
         }
 
-        setSelectedFileName(file.name);
-        setMessage("");
+        setSelectedFile(file);
+        setMessage(null);
         setProgress(0);
     };
 
     const handleUpload = async () => {
-        const file = fileInputRef.current?.files?.[0];
-        if (!file) {
-            setMessage("Please select an Excel file first");
+        if (!selectedFile) {
+            setMessage({ text: "Please select a file first", type: "error" });
             return;
         }
 
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", selectedFile);
 
-        setIsLoading(true);
+        setIsUploading(true);
         setProgress(0);
-        setMessage("");
+        setMessage(null);
 
         try {
-            const token = localStorage.getItem("jwtToken"); // Get JWT from localStorage (adjust key if different)
+            const token = localStorage.getItem("jwtToken");
 
             await axios.post(`${API_ROOT}/file-upload/excel/import`, formData, {
-                headers: {
-                    Authorization: token ? `Bearer ${token}` : "", // Send JWT if available
-                },
-                onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+                headers: token
+                    ? { Authorization: `Bearer ${token}` } // only send Auth header
+                    : undefined,
+                withCredentials: true, // keep this if you use cookies/sessions
+                onUploadProgress: (progressEvent) => {
                     if (progressEvent.total) {
-                        const percent = Math.round(
-                            (progressEvent.loaded * 100) / progressEvent.total
-                        );
+                        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                         setProgress(percent);
                     }
                 },
             });
 
-            setMessage("✅ Excel imported successfully!");
+            setMessage({ text: "✅ Excel file imported successfully!", type: "success" });
             setProgress(100);
 
-            // Reset
-            if (fileInputRef.current) {
-                fileInputRef.current.value = "";
-            }
-            setSelectedFileName("");
+            // Reset file input
+            if (fileInputRef.current) fileInputRef.current.value = "";
+            setSelectedFile(null);
         } catch (error: any) {
-            console.error("Upload failed:", error);
+            console.error("Upload error:", error);
 
             let errorMsg = "❌ Upload failed";
             if (error.response?.data?.message) {
@@ -76,91 +73,101 @@ export default function ExcelUploadPage() {
                 errorMsg += `: ${error.message}`;
             }
 
-            setMessage(errorMsg);
+            setMessage({ text: errorMsg, type: "error" });
         } finally {
-            setIsLoading(false);
+            setIsUploading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-lg mx-auto">
-                <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">
+        <div className="min-h-screen bg-emerald-950 flex items-center justify-center px-4 py-12">
+            <div className="w-full max-w-lg bg-emerald-900/40 backdrop-blur-md border border-emerald-800/50 rounded-2xl shadow-2xl p-8">
+                <h1 className="text-3xl font-serif font-bold text-emerald-100 text-center mb-8">
                     Excel Import (Master Data & Cashback)
                 </h1>
 
-                <div className="bg-white rounded-xl shadow-lg p-8">
-                    {/* File Input (hidden) */}
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".xlsx"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                    />
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".xlsx"
+                    onChange={handleFileChange}
+                    className="hidden"
+                />
 
-                    {/* Select File Button */}
+                <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                    className={`w-full flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-medium text-white transition-all
+            ${isUploading ? "bg-gray-600 cursor-not-allowed" : "bg-emerald-700 hover:bg-emerald-600"}`}
+                >
+                    <Upload size={20} />
+                    {isUploading ? "Processing..." : "Choose Excel File (.xlsx)"}
+                </button>
+
+                {selectedFile && (
+                    <div className="mt-6 p-4 bg-emerald-950/60 rounded-xl border border-emerald-800/50">
+                        <div className="flex items-center gap-3">
+                            <File size={20} className="text-emerald-400" />
+                            <span className="text-emerald-100 font-medium truncate">
+                {selectedFile.name}
+              </span>
+                        </div>
+                        <p className="text-sm text-emerald-300 mt-1">
+                            {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                    </div>
+                )}
+
+                {selectedFile && (
                     <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={isLoading}
-                        className={`w-full py-3 px-6 rounded-lg text-white font-medium transition-colors
-              ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+                        onClick={handleUpload}
+                        disabled={isUploading}
+                        className={`mt-6 w-full flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-medium text-white transition-all shadow-lg
+              ${isUploading ? "bg-gray-600 cursor-not-allowed" : "bg-green-700 hover:bg-green-600"}`}
                     >
-                        {isLoading ? "Processing..." : "Select Excel File"}
+                        {isUploading ? (
+                            <>
+                                <Loader2 className="animate-spin" size={20} />
+                                Uploading...
+                            </>
+                        ) : (
+                            <>
+                                <Upload size={20} />
+                                Start Import
+                            </>
+                        )}
                     </button>
+                )}
 
-                    {/* Selected File Info */}
-                    {selectedFileName && (
-                        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                            <p className="text-sm text-gray-700 font-medium">Selected file:</p>
-                            <p className="text-gray-900 mt-1 break-all">{selectedFileName}</p>
+                {isUploading && progress > 0 && (
+                    <div className="mt-6">
+                        <div className="w-full bg-emerald-950 rounded-full h-3 overflow-hidden">
+                            <div
+                                className="bg-gradient-to-r from-emerald-500 to-emerald-400 h-3 rounded-full transition-all duration-300 ease-out"
+                                style={{ width: `${progress}%` }}
+                            />
                         </div>
-                    )}
+                        <p className="text-center text-sm text-emerald-300 mt-2">
+                            {progress}% uploaded
+                        </p>
+                    </div>
+                )}
 
-                    {/* Upload Button */}
-                    {selectedFileName && (
-                        <button
-                            onClick={handleUpload}
-                            disabled={isLoading}
-                            className={`mt-6 w-full py-3 px-6 rounded-lg text-white font-medium transition-colors
-                ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"}`}
-                        >
-                            {isLoading ? "Uploading..." : "Start Import"}
-                        </button>
-                    )}
+                {message && (
+                    <div
+                        className={`mt-6 p-4 rounded-xl text-center flex items-center justify-center gap-3 border
+              ${message.type === "success"
+                            ? "bg-emerald-950/70 text-emerald-300 border-emerald-800/60"
+                            : "bg-red-950/70 text-red-300 border-red-800/60"}`}
+                    >
+                        {message.type === "success" ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
+                        <span>{message.text}</span>
+                    </div>
+                )}
 
-                    {/* Progress Bar */}
-                    {isLoading && progress > 0 && (
-                        <div className="mt-6">
-                            <div className="w-full bg-gray-200 rounded-full h-3">
-                                <div
-                                    className="bg-blue-600 h-3 rounded-full transition-all duration-300"
-                                    style={{ width: `${progress}%` }}
-                                />
-                            </div>
-                            <p className="text-center text-sm text-gray-600 mt-2">
-                                {progress}% uploaded
-                            </p>
-                        </div>
-                    )}
-
-                    {/* Status Message */}
-                    {message && (
-                        <div
-                            className={`mt-6 p-4 rounded-lg text-center ${
-                                message.includes("✅")
-                                    ? "bg-green-50 text-green-800 border border-green-200"
-                                    : "bg-red-50 text-red-800 border border-red-200"
-                            }`}
-                        >
-                            {message}
-                        </div>
-                    )}
-                </div>
-
-                <p className="text-center text-sm text-gray-500 mt-6">
-                    Supported format: .xlsx • Please use the correct template
+                <p className="text-center text-sm text-emerald-400/80 mt-8">
+                    Only .xlsx files supported • Use the official template
                 </p>
             </div>
         </div>

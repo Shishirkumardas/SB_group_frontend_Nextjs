@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import MasterDataForm from "@/components/MasterDataForm";
+import { Trash2, Loader2 } from "lucide-react";
 
 interface Area {
     id: number;
@@ -31,6 +32,7 @@ export default function MasterDataPage() {
     const API_URL = "http://localhost:8080/api/master-data";
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
+    const [deletingAll, setDeletingAll] = useState<boolean>(false);
 
 
     const fetchData = async () => {
@@ -63,6 +65,37 @@ export default function MasterDataPage() {
             console.error(err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const deleteAll = async () => {
+        if (!confirm("⚠️ WARNING: This will DELETE ALL master data and related cashback payments permanently. Are you absolutely sure?")) {
+            return;
+        }
+
+        if (!confirm("Last chance: This action CANNOT be undone. Proceed?")) {
+            return;
+        }
+
+        setDeletingAll(true);
+        try {
+            const res = await fetch(API_URL, {
+                method: "DELETE",
+                credentials: "include",
+            });
+
+            if (!res.ok) {
+                const errText = await res.text();
+                throw new Error(errText || "Failed to delete all records");
+            }
+
+            // setMessage("All master data deleted successfully!");
+            fetchData(); // Refresh table (will be empty)
+        } catch (err: any) {
+            console.error("Delete all failed:", err);
+            // setMessage(`Failed to delete all: ${err.message}`);
+        } finally {
+            setDeletingAll(false);
         }
     };
 
@@ -141,6 +174,30 @@ export default function MasterDataPage() {
                             <MasterDataForm onSuccess={fetchData} />
                         </div>
                     </div>
+                </div>
+
+                {/* Delete All Button – DANGER ZONE */}
+                <div className="mb-6 flex justify-end">
+                    <button
+                        onClick={deleteAll}
+                        disabled={deletingAll || loading || data.length === 0}
+                        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-white transition-all shadow-lg
+              ${deletingAll || loading || data.length === 0
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-red-600 hover:bg-red-700 active:bg-red-800"}`}
+                    >
+                        {deletingAll ? (
+                            <>
+                                <Loader2 className="animate-spin" size={18} />
+                                Deleting All...
+                            </>
+                        ) : (
+                            <>
+                                <Trash2 size={18} />
+                                Delete All Master Data
+                            </>
+                        )}
+                    </button>
                 </div>
 
                 {/* Wide Table Container */}

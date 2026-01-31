@@ -96,7 +96,9 @@ const adminLinks = [
     { name: "Manage products", href: "/admin/products" },
     { name: "Add product", href: "/admin/products/add" },
     { name: "Manage Delivery", href: "/admin/orders" },
-    { name: "Order Dashboard", href: "/order-dashboard" },
+    { name: "Order Dashboard", href: "/order-dashboard" }, //cashback/cashback-export
+    { name: "Export Cashback", href: "/cashback/cashback-export" }, //dashboard/excel-upload
+    { name: "Upload Master Data", href: "/dashboard/excel-upload" },
     { name: "Master Data", href: "/master-data" },
     { name: "Areas", href: "/areas" },
     { name: "Purchases", href: "/purchases" },
@@ -142,8 +144,18 @@ export default function Navbar() {
             <nav className="bg-emerald-950 text-white shadow-lg sticky top-0 z-50 hidden md:block border-b border-emerald-800">
                 <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <div className="flex items-center h-16">
-                        {/* Logo */}
-                        <div className="absolute top-0 left-0 m-4 z-50">
+                        {/* Logo + Text */}
+                        <div className="absolute top-0 left-0 m-4 z-50 flex items-center gap-3">
+                            {/* Company Logo */}
+                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-600/70 shadow-lg flex-shrink-0">
+                                <img
+                                    src="/images/sb-group-logo.png" // ← Replace with your actual logo path
+                                    alt="SB Group Logo"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+
+                            {/* Text beside logo */}
                             <Link
                                 href="/"
                                 className="text-3xl font-serif tracking-wider text-emerald-100 hover:text-white transition-all duration-300"
@@ -286,7 +298,15 @@ export default function Navbar() {
             <nav className="bg-emerald-950 text-white shadow-lg sticky top-0 z-50 md:hidden border-b border-emerald-800">
                 <div className="px-4">
                     <div className="flex items-center justify-between h-14">
-                        <Link href="/" className="text-xl font-serif tracking-wide font-bold text-emerald-100">
+                        <Link href="/" className="text-xl font-serif tracking-wide font-bold text-emerald-100 flex items-center gap-2">
+                            {/* Small logo in mobile too */}
+                            <div className="w-8 h-8 rounded-full overflow-hidden border border-emerald-600/50 flex-shrink-0">
+                                <img
+                                    src="/images/sb-group-logo.png"
+                                    alt="SB Group Logo"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
                             SB Group
                         </Link>
                         <button onClick={() => setIsMobileOpen(!isMobileOpen)}>
