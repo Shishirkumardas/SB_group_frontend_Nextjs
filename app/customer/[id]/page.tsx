@@ -10,13 +10,13 @@ export default function CustomerFormPage() {
     const [methods, setMethods] = useState<string[]>([]);
     const [mounted, setMounted] = useState(false);
 
-
     const [form, setForm] = useState({
         customerName: "",
         areaID: "",
         phoneNumber: "",
         nid: "",
         amount: "",
+        quantity: "",          // ← NEW: Quantity field
         paymentDate: "",
         paymentMethod: "",
     });
@@ -24,7 +24,6 @@ export default function CustomerFormPage() {
     useEffect(() => {
         setMounted(true);
     }, []);
-
 
     useEffect(() => {
         fetch("http://localhost:8080/api/areas")
@@ -49,6 +48,7 @@ export default function CustomerFormPage() {
                 phoneNumber: form.phoneNumber,
                 nid: form.nid,
                 amount: Number(form.amount),
+                quantity: Number(form.quantity),          // ← NEW: sent to backend
                 paymentDate: form.paymentDate,
                 paymentMethod: form.paymentMethod,
             }),
@@ -69,7 +69,6 @@ export default function CustomerFormPage() {
     };
 
     if (!mounted) return null;
-
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
@@ -170,6 +169,21 @@ export default function CustomerFormPage() {
                                 className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-sm bg-gray-50"
                                 value={form.amount}
                                 onChange={(e) => setForm({ ...form, amount: e.target.value })}
+                            />
+                        </div>
+
+                        {/* NEW: Quantity */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                পরিমাণ / Quantity
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="পণ্যের পরিমাণ দিন / Enter quantity"
+                                className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-sm bg-gray-50"
+                                value={form.quantity}
+                                onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+                                min="1"
                             />
                         </div>
 

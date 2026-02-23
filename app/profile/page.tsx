@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, LogOut, Package, MapPin, Phone, User as UserIcon } from "lucide-react";
 import Link from "next/link";
@@ -50,7 +50,7 @@ export default function ProfilePage() {
                 setLoading(true);
                 setError(null);
 
-                // Fetch current user from /me (includes id, name, phone, address, email)
+                // Fetch current user from /me
                 const userRes = await fetch("http://localhost:8080/api/auth/profile", {
                     credentials: "include",
                     cache: "no-store",
@@ -70,7 +70,7 @@ export default function ProfilePage() {
                     email: userData.email || "",
                 });
 
-                // Optional: Fetch orders
+                // Fetch orders
                 try {
                     const ordersRes = await fetch(
                         `http://localhost:8080/api/orders?userId=${userId}`,
@@ -122,10 +122,10 @@ export default function ProfilePage() {
                 throw new Error(err.message || "Update failed");
             }
 
-            alert("Profile updated successfully!");
-            await refreshAuth(); // refresh context after save
+            alert("প্রোফাইল সফলভাবে আপডেট হয়েছে! / Profile updated successfully!");
+            await refreshAuth();
         } catch (err: any) {
-            setError(err.message || "Could not save profile");
+            setError(err.message || "প্রোফাইল আপডেট করা যায়নি / Could not save profile");
         } finally {
             setSaving(false);
         }
@@ -147,20 +147,20 @@ export default function ProfilePage() {
 
     if (authLoading || loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <Loader2 className="h-12 w-12 animate-spin text-black" />
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+                <Loader2 className="h-12 w-12 animate-spin text-emerald-600" />
             </div>
         );
     }
 
     if (error || !userId) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center p-10 bg-white rounded-xl shadow-lg max-w-md">
-                    <h2 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h2>
-                    <p className="text-gray-700 mb-6">{error || "Please log in to view your profile"}</p>
-                    <Link href="/login" className="inline-block bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-900">
-                        Log In
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+                <div className="text-center p-10 bg-white rounded-3xl shadow-2xl max-w-md border border-emerald-100">
+                    <h2 className="text-2xl font-bold text-red-600 mb-4">প্রবেশাধিকার অস্বীকৃত / Access Denied</h2>
+                    <p className="text-gray-700 mb-6">{error || "প্রোফাইল দেখতে লগইন করুন / Please log in to view your profile"}</p>
+                    <Link href="/login" className="inline-block bg-emerald-600 text-white px-8 py-3 rounded-xl hover:bg-emerald-700 transition">
+                        লগইন করুন / Log In
                     </Link>
                 </div>
             </div>
@@ -168,49 +168,60 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-5xl mx-auto">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-6">
                     <div>
-                        <h1 className="text-3xl font-serif font-medium">My Account</h1>
-                        <p className="text-gray-600 mt-1">Manage your profile and orders</p>
+                        <h1 className="text-4xl md:text-5xl font-bold text-emerald-800 tracking-tight">
+                            আমার অ্যাকাউন্ট / My Account
+                        </h1>
+                        <p className="text-lg text-emerald-700/80 mt-2">
+                            আপনার প্রোফাইল এবং অর্ডার পরিচালনা করুন / Manage your profile and orders
+                        </p>
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-lg transition font-medium"
+                        className="flex items-center gap-2 px-6 py-3 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-xl transition font-medium shadow-sm"
                     >
                         <LogOut size={18} />
-                        Logout
+                        লগআউট / Logout
                     </button>
                 </div>
 
                 {error && (
-                    <div className="mb-8 p-4 bg-red-50 border border-red-200 text-red-800 rounded-xl">
+                    <div className="mb-10 p-5 bg-red-50 border border-red-200 text-red-800 rounded-2xl shadow-sm">
                         {error}
                     </div>
                 )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Profile Card */}
+                    {/* Profile Info Card */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-2xl shadow-sm border p-6 sticky top-6">
-                            <div className="flex flex-col items-center text-center mb-6">
-                                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                    <UserIcon size={36} className="text-gray-500" />
+                        <div className="bg-white rounded-3xl shadow-2xl border border-emerald-100 p-8 sticky top-6">
+                            <div className="flex flex-col items-center text-center mb-8">
+                                <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mb-5 shadow-inner">
+                                    <UserIcon size={48} className="text-emerald-600" />
                                 </div>
-                                <h2 className="text-xl font-medium">{user.name}</h2>
-                                <p className="text-gray-500 text-sm mt-1">{user.email}</p>
+                                <h2 className="text-2xl font-bold text-emerald-800">{user.name}</h2>
+                                <p className="text-gray-600 mt-1">{user.email}</p>
                             </div>
 
-                            <div className="space-y-4 text-sm">
-                                <div className="flex items-center gap-3">
-                                    <Phone size={18} className="text-gray-500" />
-                                    <span>{user.phone || "—"}</span>
+                            <div className="space-y-5 text-gray-700">
+                                <div className="flex items-center gap-4">
+                                    <Phone size={20} className="text-emerald-600" />
+                                    <div>
+                                        <p className="text-sm text-gray-500">ফোন / Phone</p>
+                                        <p className="font-medium">{user.phone || "—"}</p>
+                                    </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <MapPin size={18} className="text-gray-500 mt-0.5" />
-                                    <span>{user.address || "—"}</span>
+
+                                <div className="flex items-start gap-4">
+                                    <MapPin size={20} className="text-emerald-600 mt-1" />
+                                    <div>
+                                        <p className="text-sm text-gray-500">ঠিকানা / Address</p>
+                                        <p className="font-medium">{user.address || "—"}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -219,89 +230,97 @@ export default function ProfilePage() {
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* Edit Profile */}
-                        <div className="bg-white rounded-2xl shadow-sm border p-7">
-                            <h2 className="text-xl font-medium mb-6 flex items-center gap-2">
-                                <UserIcon size={20} />
-                                Personal Information
+                        <div className="bg-white rounded-3xl shadow-2xl border border-emerald-100 p-8">
+                            <h2 className="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-3">
+                                <UserIcon size={24} className="text-emerald-600" />
+                                ব্যক্তিগত তথ্য / Personal Information
                             </h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm text-gray-600 mb-1.5">Full Name</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        পুরো নাম / Full Name
+                                    </label>
                                     <input
                                         type="text"
-                                        className="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-black focus:border-black"
+                                        className="w-full px-5 py-3.5 border border-emerald-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-sm bg-gray-50"
                                         value={user.name}
                                         onChange={(e) => setUser({ ...user, name: e.target.value })}
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-600 mb-1.5">Phone Number</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        ফোন নম্বর / Phone Number
+                                    </label>
                                     <input
                                         type="tel"
-                                        className="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-black focus:border-black"
+                                        className="w-full px-5 py-3.5 border border-emerald-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-sm bg-gray-50"
                                         value={user.phone}
                                         onChange={(e) => setUser({ ...user, phone: e.target.value })}
                                     />
                                 </div>
 
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm text-gray-600 mb-1.5">Delivery Address</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        ডেলিভারি ঠিকানা / Delivery Address
+                                    </label>
                                     <textarea
-                                        rows={3}
-                                        className="w-full border rounded-lg px-4 py-2.5 resize-none focus:ring-2 focus:ring-black focus:border-black"
+                                        rows={4}
+                                        className="w-full px-5 py-3.5 border border-emerald-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-sm bg-gray-50 resize-none"
                                         value={user.address}
                                         onChange={(e) => setUser({ ...user, address: e.target.value })}
                                     />
                                 </div>
                             </div>
 
-                            <div className="mt-8">
+                            <div className="mt-10">
                                 <button
                                     onClick={handleSave}
                                     disabled={saving}
-                                    className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition disabled:opacity-50 flex items-center gap-2"
+                                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-4 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                                 >
                                     {saving ? (
                                         <>
-                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                            Saving...
+                                            <Loader2 className="h-5 w-5 animate-spin" />
+                                            সংরক্ষণ করা হচ্ছে... / Saving...
                                         </>
                                     ) : (
-                                        "Save Changes"
+                                        "পরিবর্তন সংরক্ষণ করুন / Save Changes"
                                     )}
                                 </button>
                             </div>
                         </div>
 
-                        {/* Recent orders */}
-                        <div className="bg-white rounded-2xl shadow-sm border p-7">
-                            <h2 className="text-xl font-medium mb-6 flex items-center gap-2">
-                                <Package size={20} />
-                                Recent Orders
+                        {/* Recent Orders */}
+                        <div className="bg-white rounded-3xl shadow-2xl border border-emerald-100 p-8">
+                            <h2 className="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-3">
+                                <Package size={24} className="text-emerald-600" />
+                                সাম্প্রতিক অর্ডার / Recent Orders
                             </h2>
 
                             {orders.length === 0 ? (
-                                <div className="text-center py-12 text-gray-500">
-                                    <Package className="h-12 w-12 mx-auto mb-4 opacity-40" />
-                                    <p>No orders found.</p>
-                                    <Link href="/jewellery" className="text-black underline mt-2 inline-block">
-                                        Start shopping →
+                                <div className="text-center py-16 text-gray-600">
+                                    <Package className="h-16 w-16 mx-auto mb-6 opacity-40 text-emerald-600" />
+                                    <p className="text-lg font-medium">কোনো অর্ডার পাওয়া যায়নি / No orders found.</p>
+                                    <Link href="/jewellery" className="mt-4 inline-block text-emerald-600 hover:underline font-medium">
+                                        কেনাকাটা শুরু করুন → / Start shopping →
                                     </Link>
                                 </div>
                             ) : (
-                                <div className="space-y-5">
+                                <div className="space-y-6">
                                     {orders.slice(0, 5).map((order) => (
                                         <div
                                             key={order.id}
-                                            className="border rounded-xl p-5 hover:border-gray-300 transition"
+                                            className="border border-emerald-100 rounded-2xl p-6 hover:border-emerald-300 transition-all bg-gray-50"
                                         >
-                                            <div className="flex justify-between items-start mb-3">
+                                            <div className="flex justify-between items-start mb-4">
                                                 <div>
-                                                    <p className="font-medium">Order #{order.id}</p>
-                                                    <p className="text-sm text-gray-500">
-                                                        {new Date(order.orderDate).toLocaleDateString("en-US", {
+                                                    <p className="font-semibold text-lg text-emerald-800">
+                                                        অর্ডার #{order.id}
+                                                    </p>
+                                                    <p className="text-sm text-gray-600 mt-1">
+                                                        {new Date(order.orderDate).toLocaleDateString("en-GB", {
                                                             year: "numeric",
                                                             month: "long",
                                                             day: "numeric",
@@ -309,7 +328,7 @@ export default function ProfilePage() {
                                                     </p>
                                                 </div>
                                                 <span
-                                                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                                    className={`px-4 py-1.5 rounded-full text-sm font-medium ${
                                                         order.status === "DELIVERED"
                                                             ? "bg-green-100 text-green-800"
                                                             : order.status === "PENDING"
@@ -322,16 +341,16 @@ export default function ProfilePage() {
                                                     {order.status}
                                                 </span>
                                             </div>
-                                            <p className="font-medium text-lg">
+                                            <p className="text-xl font-bold text-emerald-700">
                                                 ৳ {order.totalAmount.toLocaleString()}
                                             </p>
                                         </div>
                                     ))}
 
                                     {orders.length > 5 && (
-                                        <div className="text-center mt-4">
-                                            <Link href="/orders" className="text-black hover:underline">
-                                                View all orders →
+                                        <div className="text-center mt-8">
+                                            <Link href="/orders" className="text-emerald-600 hover:text-emerald-800 font-medium underline">
+                                                সব অর্ডার দেখুন → / View all orders →
                                             </Link>
                                         </div>
                                     )}

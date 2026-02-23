@@ -275,6 +275,13 @@ export default function Navbar() {
                                             My Profile
                                         </Link>
 
+                                        <Link
+                                            href="/customer"
+                                            className="block px-5 py-2.5 text-sm text-emerald-200 hover:bg-emerald-800/50 transition"
+                                        >
+                                            Customer
+                                        </Link>
+
                                         <button
                                             onClick={handleLogout}
                                             className="w-full text-left px-5 py-2.5 text-sm text-red-300 hover:bg-red-900/30 transition flex items-center gap-2"

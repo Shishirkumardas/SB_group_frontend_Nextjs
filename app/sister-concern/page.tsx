@@ -27,7 +27,20 @@ const sisterConcerns = [
         slug: "apon-housing",
         title: "RM Apon Housing",
         tagline: "Dream Homes, Built with Trust",
-        description: "Modern, affordable residential projects with smart design and family-centric living.",
+        description: "🌍 New Journey Bangladesh Ltd. – Building Dreams with Transparency | স্বচ্ছতায় গড়ে তুলি স্বপ্নের ঠিকানা 🏡\n" +
+            "✨ Our Vision | আমাদের লক্ষ্য:\n" +
+            "To transform well-located land into valuable opportunities by offering transparent, secure, and fair land transactions that help buyers build their future with confidence.\n" +
+            "ভালো অবস্থানের জমিকে মূল্যবান সুযোগে রূপান্তর করা — স্বচ্ছ, নিরাপদ ও ন্যায্য লেনদেনের মাধ্যমে ক্রেতাদের আত্মবিশ্বাসের সঙ্গে ভবিষ্যৎ গড়তে সহায়তা করা।\n" +
+            "📍 Project Location | প্রকল্পের অবস্থান:\n" +
+            "Mouja Boro Kamalpur No. 148\n" +
+            "RS No. 673\n" +
+            "📌 Available Plots | বিক্রয়যোগ্য প্লটসমূহ:\n" +
+            "Plot No. 6: 4.65 Decimal Land | ৪.৬৫ ডেসিমেল জমি\n" +
+            "Plot No. 12: 5 Decimal Land | ৫ ডেসিমেল জমি\n" +
+            "🌿 Invest in a future built on trust, value, and growth.\n" +
+            "বিশ্বাস, মূল্য ও উন্নয়নের ভিত্তিতে গড়ে তুলুন আপনার ভবিষ্যৎ।\n" +
+            "Join New Journey Bangladesh Ltd. today and take the first step toward your dream property!\n" +
+            "আজই যোগ দিন নিউ জার্নি বাংলাদেশ লিমিটেড-এর সাথে, শুরু করুন আপনার স্বপ্নের ঠিকানার যাত্রা!",
         icon: Home,
         accent: "text-amber-400",
         href: "/sister-concern/apon-housing"

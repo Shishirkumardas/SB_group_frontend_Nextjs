@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import MasterDataForm from "@/components/MasterDataForm";
-import { Trash2, Loader2 } from "lucide-react";
+import { Trash2, Loader2, CheckCircle2, XCircle } from "lucide-react";
 
 interface Area {
     id: number;
@@ -22,18 +22,18 @@ interface MasterData {
     paidAmount: number;
     dueAmount: number;
     cashBackAmount: number;
+    paymentCompleted: boolean; // ← NEW FIELD ADDED
 }
 
 export default function MasterDataPage() {
     const [data, setData] = useState<MasterData[]>([]);
     const [filteredData, setFilteredData] = useState<MasterData[]>([]);
     const [selectedDate, setSelectedDate] = useState<string>(""); // empty = all dates
-    const [loading, setLoading] = useState<boolean>(false); // ← FIXED: Added this!
+    const [loading, setLoading] = useState<boolean>(false);
     const API_URL = "http://localhost:8080/api/master-data";
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
     const [deletingAll, setDeletingAll] = useState<boolean>(false);
-
 
     const fetchData = async () => {
         setLoading(true);
@@ -89,11 +89,9 @@ export default function MasterDataPage() {
                 throw new Error(errText || "Failed to delete all records");
             }
 
-            // setMessage("All master data deleted successfully!");
             fetchData(); // Refresh table (will be empty)
         } catch (err: any) {
             console.error("Delete all failed:", err);
-            // setMessage(`Failed to delete all: ${err.message}`);
         } finally {
             setDeletingAll(false);
         }
@@ -102,7 +100,6 @@ export default function MasterDataPage() {
     useEffect(() => {
         setMounted(true);
     }, []);
-
 
     // Fetch all data once on mount
     useEffect(() => {
@@ -203,7 +200,7 @@ export default function MasterDataPage() {
                 {/* Wide Table Container */}
                 <div className="bg-white rounded-2xl shadow-2xl border border-emerald-100 overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="min-w-[1400px] w-full divide-y divide-emerald-100">
+                        <table className="min-w-[1500px] w-full divide-y divide-emerald-100">
                             <thead className="bg-gradient-to-r from-emerald-700 to-teal-700">
                             <tr>
                                 <th className="w-16 px-4 py-5 text-left text-sm font-semibold text-white uppercase tracking-wider">
@@ -233,6 +230,9 @@ export default function MasterDataPage() {
                                 <th className="w-40 px-4 py-5 text-right text-sm font-semibold text-white uppercase tracking-wider">
                                     Cashback Due
                                 </th>
+                                <th className="w-32 px-4 py-5 text-center text-sm font-semibold text-white uppercase tracking-wider">
+                                    Paid?
+                                </th>
                                 <th className="w-80 px-4 py-5 text-center text-sm font-semibold text-white uppercase tracking-wider">
                                     Actions
                                 </th>
@@ -242,13 +242,13 @@ export default function MasterDataPage() {
                             <tbody className="bg-white divide-y divide-emerald-50">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={10} className="px-6 py-16 text-center text-gray-500 text-lg font-medium animate-pulse">
+                                    <td colSpan={11} className="px-6 py-16 text-center text-gray-500 text-lg font-medium animate-pulse">
                                         Loading records...
                                     </td>
                                 </tr>
                             ) : filteredData.length === 0 ? (
                                 <tr>
-                                    <td colSpan={10} className="px-6 py-16 text-center text-gray-500 text-lg font-medium">
+                                    <td colSpan={11} className="px-6 py-16 text-center text-gray-500 text-lg font-medium">
                                         No records found {selectedDate ? `for ${selectedDate}` : ""}
                                     </td>
                                 </tr>
@@ -288,6 +288,16 @@ export default function MasterDataPage() {
                                             <td className="px-4 py-5 whitespace-nowrap text-sm text-right font-medium text-amber-700">
                                                 {Number(d.dueAmount).toLocaleString()}
                                             </td>
+
+                                            {/* NEW: Payment Completed Column */}
+                                            <td className="px-4 py-5 whitespace-nowrap text-center">
+                                                {d.paymentCompleted ? (
+                                                    <CheckCircle2 className="inline-block text-green-600" size={24} />
+                                                ) : (
+                                                    <XCircle className="inline-block text-red-600" size={24} />
+                                                )}
+                                            </td>
+
                                             <td className="px-4 py-5 whitespace-nowrap text-center flex items-center justify-center gap-3 flex-wrap">
                                                 {/* Cashback Details Button */}
                                                 <button

@@ -2,6 +2,8 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+
 
 
 const sisterConcerns = {
@@ -17,7 +19,19 @@ const sisterConcerns = {
             "Specialized departments: Cardiology, Neurology, Oncology",
             "Community health outreach programs"
         ],
-        cta: "Visit Hospital Website"
+        cta: "Visit Hospital Website",
+        gallery: [
+            "/images/apon/apon-housing-1.jpg",   // master plan / aerial view
+            "/images/apon/apon-housing-2.jpg",   // entrance gate
+            "/images/apon/apon-housing-3.jpg",   // sample plot / road
+            // "/images/apon/apon-housing-4.jpg",   // residential block
+            // "/images/apon/apon-housing-5.jpg",   // green space / park
+            // "/images/apon/apon-housing-6.jpg",   // night view / lighting
+        ],
+        videos: [
+            "/videos/apon-housing-overview.mp4",
+            "/videos/apon-housing-drone.mp4",
+        ]
     },
     "sb-society": {
         title: "SB Health & Education Society",
@@ -31,12 +45,37 @@ const sisterConcerns = {
             "Scholarships for meritorious students",
             "Women empowerment & literacy programs"
         ],
-        cta: "Support Our Mission"
+        cta: "Support Our Mission",
+        gallery: [
+            "/images/apon/apon-housing-1.jpg",   // master plan / aerial view
+            "/images/apon/apon-housing-2.jpg",   // entrance gate
+            "/images/apon/apon-housing-3.jpg",   // sample plot / road
+            // "/images/apon/apon-housing-4.jpg",   // residential block
+            // "/images/apon/apon-housing-5.jpg",   // green space / park
+            // "/images/apon/apon-housing-6.jpg",   // night view / lighting
+        ],
+        videos: [
+            "/videos/apon-housing-overview.mp4",
+            "/videos/apon-housing-drone.mp4",
+        ]
     },
     "apon-housing": {
         title: "RM Apon Housing",
         tagline: "Dream Homes, Built with Trust",
-        description: "RM Apon Housing delivers modern, affordable, and thoughtfully designed residential projects across Dhaka and beyond. Every home is crafted with quality materials, smart planning, and customer satisfaction at the core.",
+        description: "🌍 New Journey Bangladesh Ltd. – Building Dreams with Transparency | স্বচ্ছতায় গড়ে তুলি স্বপ্নের ঠিকানা 🏡\n" +
+            "✨ Our Vision | আমাদের লক্ষ্য:\n" +
+            "To transform well-located land into valuable opportunities by offering transparent, secure, and fair land transactions that help buyers build their future with confidence.\n" +
+            "ভালো অবস্থানের জমিকে মূল্যবান সুযোগে রূপান্তর করা — স্বচ্ছ, নিরাপদ ও ন্যায্য লেনদেনের মাধ্যমে ক্রেতাদের আত্মবিশ্বাসের সঙ্গে ভবিষ্যৎ গড়তে সহায়তা করা।\n" +
+            "📍 Project Location | প্রকল্পের অবস্থান:\n" +
+            "Mouja Boro Kamalpur No. 148\n" +
+            "RS No. 673\n" +
+            "📌 Available Plots | বিক্রয়যোগ্য প্লটসমূহ:\n" +
+            "Plot No. 6: 4.65 Decimal Land | ৪.৬৫ ডেসিমেল জমি\n" +
+            "Plot No. 12: 5 Decimal Land | ৫ ডেসিমেল জমি\n" +
+            "🌿 Invest in a future built on trust, value, and growth.\n" +
+            "বিশ্বাস, মূল্য ও উন্নয়নের ভিত্তিতে গড়ে তুলুন আপনার ভবিষ্যৎ।\n" +
+            "Join New Journey Bangladesh Ltd. today and take the first step toward your dream property!\n" +
+            "আজই যোগ দিন নিউ জার্নি বাংলাদেশ লিমিটেড-এর সাথে, শুরু করুন আপনার স্বপ্নের ঠিকানার যাত্রা!",
         image: "/images/apon-housing-hero.jpg",
         features: [
             "Gated communities with 24/7 security",
@@ -45,7 +84,19 @@ const sisterConcerns = {
             "Eco-friendly & energy-efficient buildings",
             "Flexible payment plans"
         ],
-        cta: "Explore Projects"
+        cta: "Explore Projects",
+        gallery: [
+            "/images/apon/apon-housing-1.jpg",   // master plan / aerial view
+            "/images/apon/apon-housing-2.jpg",   // entrance gate
+            "/images/apon/apon-housing-3.jpg",   // sample plot / road
+            // "/images/apon/apon-housing-4.jpg",   // residential block
+            // "/images/apon/apon-housing-5.jpg",   // green space / park
+            // "/images/apon/apon-housing-6.jpg",   // night view / lighting
+        ],
+        videos: [
+            "/videos/apon-housing-overview.mp4",
+            "/videos/apon-housing-drone.mp4",
+        ],
     },
     "sb-hotel": {
         title: "SB 3 Star Hotel",
@@ -59,7 +110,19 @@ const sisterConcerns = {
             "Fitness center & spa services",
             "Complimentary high-speed Wi-Fi"
         ],
-        cta: "Book Now"
+        cta: "Book Now",
+        gallery: [
+            "/images/apon/apon-housing-1.jpg",   // master plan / aerial view
+            "/images/apon/apon-housing-2.jpg",   // entrance gate
+            "/images/apon/apon-housing-3.jpg",   // sample plot / road
+            // "/images/apon/apon-housing-4.jpg",   // residential block
+            // "/images/apon/apon-housing-5.jpg",   // green space / park
+            // "/images/apon/apon-housing-6.jpg",   // night view / lighting
+        ],
+        videos: [
+            "/videos/apon-housing-overview.mp4",
+            "/videos/apon-housing-drone.mp4",
+        ]
     },
     "sb-resort": {
         title: "SB Resort & Housing",
@@ -73,7 +136,19 @@ const sisterConcerns = {
             "Organic farming & green zones",
             "24/7 security & power backup"
         ],
-        cta: "Discover the Lifestyle"
+        cta: "Discover the Lifestyle",
+        gallery: [
+            "/images/apon/apon-housing-1.jpg",   // master plan / aerial view
+            "/images/apon/apon-housing-2.jpg",   // entrance gate
+            "/images/apon/apon-housing-3.jpg",   // sample plot / road
+            // "/images/apon/apon-housing-4.jpg",   // residential block
+            // "/images/apon/apon-housing-5.jpg",   // green space / park
+            // "/images/apon/apon-housing-6.jpg",   // night view / lighting
+        ],
+        videos: [
+            "/videos/apon-housing-overview.mp4",
+            "/videos/apon-housing-drone.mp4",
+        ]
     },
     "sb-developer": {
         title: "SB Developer",
@@ -87,7 +162,19 @@ const sisterConcerns = {
             "Sustainable & green building practices",
             "Transparent booking & handover process"
         ],
-        cta: "View Our Portfolio"
+        cta: "View Our Portfolio",
+        gallery: [
+            "/images/apon/apon-housing-1.jpg",   // master plan / aerial view
+            "/images/apon/apon-housing-2.jpg",   // entrance gate
+            "/images/apon/apon-housing-3.jpg",   // sample plot / road
+            // "/images/apon/apon-housing-4.jpg",   // residential block
+            // "/images/apon/apon-housing-5.jpg",   // green space / park
+            // "/images/apon/apon-housing-6.jpg",   // night view / lighting
+        ],
+        videos: [
+            "/videos/apon-housing-overview.mp4",
+            "/videos/apon-housing-drone.mp4",
+        ]
     },
     "sb-construction": {
         title: "SB Construction",
@@ -101,7 +188,19 @@ const sisterConcerns = {
             "Renovation & retrofitting expertise",
             "Quality control & safety first"
         ],
-        cta: "Partner With Us"
+        cta: "Partner With Us",
+        gallery: [
+            "/images/apon/apon-housing-1.jpg",   // master plan / aerial view
+            "/images/apon/apon-housing-2.jpg",   // entrance gate
+            "/images/apon/apon-housing-3.jpg",   // sample plot / road
+            // "/images/apon/apon-housing-4.jpg",   // residential block
+            // "/images/apon/apon-housing-5.jpg",   // green space / park
+            // "/images/apon/apon-housing-6.jpg",   // night view / lighting
+        ],
+        videos: [
+            "/videos/apon-housing-overview.mp4",
+            "/videos/apon-housing-drone.mp4",
+        ]
     },
     "sb-cosmetics": {
         title: "SB Cosmetics",
@@ -115,7 +214,19 @@ const sisterConcerns = {
             "Affordable luxury range",
             "Made in Bangladesh"
         ],
-        cta: "Shop Now"
+        cta: "Shop Now",
+        gallery: [
+            "/images/apon/apon-housing-1.jpg",   // master plan / aerial view
+            "/images/apon/apon-housing-2.jpg",   // entrance gate
+            "/images/apon/apon-housing-3.jpg",   // sample plot / road
+            // "/images/apon/apon-housing-4.jpg",   // residential block
+            // "/images/apon/apon-housing-5.jpg",   // green space / park
+            // "/images/apon/apon-housing-6.jpg",   // night view / lighting
+        ],
+        videos: [
+            "/videos/apon-housing-overview.mp4",
+            "/videos/apon-housing-drone.mp4",
+        ]
     },
     "sb-pharma": {
         title: "SB Pharmaceuticals",
@@ -129,7 +240,19 @@ const sisterConcerns = {
             "Affordable essential medicines",
             "Strong distribution network"
         ],
-        cta: "Learn More"
+        cta: "Learn More",
+        gallery: [
+            "/images/apon/apon-housing-1.jpg",   // master plan / aerial view
+            "/images/apon/apon-housing-2.jpg",   // entrance gate
+            "/images/apon/apon-housing-3.jpg",   // sample plot / road
+            // "/images/apon/apon-housing-4.jpg",   // residential block
+            // "/images/apon/apon-housing-5.jpg",   // green space / park
+            // "/images/apon/apon-housing-6.jpg",   // night view / lighting
+        ],
+        videos: [
+            "/videos/apon-housing-overview.mp4",
+            "/videos/apon-housing-drone.mp4",
+        ]
     }
 };
 
@@ -179,9 +302,61 @@ export default function SisterConcernPage() {
                         About {concern.title.split(" ")[0]}
                     </h2>
 
-                    <p className="text-emerald-200 text-lg leading-relaxed mb-10">
+                    <div className="text-emerald-200 text-lg leading-relaxed mb-10 whitespace-pre-line">
                         {concern.description}
-                    </p>
+                    </div>
+
+                    {/* New: Gallery Section – only shown if gallery exists */}
+                    {concern.gallery && concern.gallery.length > 0 && (
+                        <div className="mb-12">
+                            <h3 className="text-3xl font-serif font-bold text-emerald-100 mb-6 text-center">
+                                Project Gallery
+                            </h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {concern.gallery.map((imgSrc, index) => (
+                                    <div
+                                        key={index}
+                                        className="relative overflow-hidden rounded-2xl shadow-lg group aspect-[4/3]"
+                                    >
+                                        <Image
+                                            src={imgSrc}
+                                            alt={`${concern.title} - Image ${index + 1}`}
+                                            fill
+                                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        />
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="text-white text-lg font-medium px-4 py-2 bg-black/50 rounded-full">
+                        View Larger
+                      </span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Videos Section */}
+                    {concern.videos && concern.videos.length > 0 && (
+                        <div className="mb-12">
+                            <h3 className="text-3xl font-serif font-bold text-emerald-100 mb-6 text-center">
+                                Project Videos
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {concern.videos.map((videoUrl, index) => (
+                                    <div key={index} className="relative overflow-hidden rounded-2xl shadow-lg aspect-video">
+                                        <iframe
+                                            src={videoUrl}
+                                            title={`${concern.title} - Video ${index + 1}`}
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                            className="absolute inset-0 w-full h-full"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     <div className="grid md:grid-cols-2 gap-8 mb-12">
                         {concern.features.map((feature, idx) => (
