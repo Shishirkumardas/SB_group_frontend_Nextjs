@@ -99,6 +99,7 @@ const adminLinks = [
     { name: "Order Dashboard", href: "/order-dashboard" }, //cashback/cashback-export
     { name: "Export Cashback", href: "/cashback/cashback-export" }, //dashboard/excel-upload
     { name: "Upload Master Data", href: "/dashboard/excel-upload" },
+    { name: "Cashback Payout Update", href: "/cashback_payout_update" },
     { name: "Master Data", href: "/master-data" },
     { name: "Areas", href: "/areas" },
     { name: "Purchases", href: "/purchases" },
