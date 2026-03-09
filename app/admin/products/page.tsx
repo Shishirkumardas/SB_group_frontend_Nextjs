@@ -1,3 +1,4 @@
+// app/admin/products/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -13,6 +14,12 @@ interface Product {
     imageUrl?: string;
 }
 
+// Use environment variable (set in .env.local & Render dashboard)
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+// Fallback placeholder - can be local (/images/placeholder-product.jpg) or external
+const PLACEHOLDER_IMAGE = "/images/placeholder-product.jpg"; // preferred
+// const PLACEHOLDER_IMAGE = "https://placehold.co/300x300?text=No+Image"; // external fallback
+
 export default function AdminProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -25,7 +32,7 @@ export default function AdminProductsPage() {
         const fetchProducts = async () => {
             try {
                 setLoading(true);
-                const res = await fetch("http://localhost:8080/api/products", {
+                const res = await fetch(`${API_BASE}/api/products`, {
                     credentials: "include",
                 });
 
@@ -34,8 +41,8 @@ export default function AdminProductsPage() {
                 const data = await res.json();
                 setProducts(data);
                 setFilteredProducts(data);
-            } catch (err) {
-                setError("Could not load products. Please try again.");
+            } catch (err: any) {
+                setError(err.message || "Could not load products. Please try again.");
             } finally {
                 setLoading(false);
             }
@@ -51,10 +58,11 @@ export default function AdminProductsPage() {
         }
 
         const term = searchTerm.toLowerCase();
-        const filtered = products.filter(p =>
-            p.name.toLowerCase().includes(term) ||
-            p.category.toLowerCase().includes(term) ||
-            String(p.id).includes(term)
+        const filtered = products.filter(
+            (p) =>
+                p.name.toLowerCase().includes(term) ||
+                p.category.toLowerCase().includes(term) ||
+                String(p.id).includes(term)
         );
 
         setFilteredProducts(filtered);
@@ -65,15 +73,15 @@ export default function AdminProductsPage() {
 
         setDeletingId(id);
         try {
-            const res = await fetch(`http://localhost:8080/api/admin/products/${id}`, {
+            const res = await fetch(`${API_BASE}/api/admin/products/${id}`, {
                 method: "DELETE",
                 credentials: "include",
             });
 
             if (!res.ok) throw new Error("Delete failed");
 
-            setProducts(prev => prev.filter(p => p.id !== id));
-            setFilteredProducts(prev => prev.filter(p => p.id !== id));
+            setProducts((prev) => prev.filter((p) => p.id !== id));
+            setFilteredProducts((prev) => prev.filter((p) => p.id !== id));
         } catch (err) {
             alert("Failed to delete product. Please try again.");
         } finally {
@@ -102,7 +110,7 @@ export default function AdminProductsPage() {
                             Manage Products
                         </h1>
                         <p className="mt-2 text-emerald-300/90">
-                            {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
+                            {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""} found
                         </p>
                     </div>
 
@@ -112,7 +120,7 @@ export default function AdminProductsPage() {
                             type="text"
                             placeholder="Search by name, category, ID..."
                             value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-12 pr-5 py-3.5 bg-emerald-950 border border-emerald-700 rounded-full text-emerald-100 placeholder-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all shadow-inner"
                         />
                     </div>
@@ -126,7 +134,7 @@ export default function AdminProductsPage() {
                     </div>
                 )}
 
-                {/* Products Table / Cards */}
+                {/* Products Table */}
                 {filteredProducts.length === 0 ? (
                     <div className="bg-emerald-900/40 backdrop-blur-xl rounded-2xl shadow-2xl p-16 text-center border border-emerald-800/40">
                         <div className="mx-auto w-20 h-20 bg-emerald-950/50 rounded-full flex items-center justify-center mb-6 border border-emerald-700/30">
@@ -145,36 +153,45 @@ export default function AdminProductsPage() {
                             <table className="min-w-full divide-y divide-emerald-800/50">
                                 <thead className="bg-emerald-950/60">
                                 <tr>
-                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">Image</th>
-                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">Product</th>
-                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">Category</th>
-                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">Price</th>
-                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">Stock</th>
-                                    <th className="px-6 py-5 text-right text-xs font-medium text-emerald-300 uppercase tracking-wider">Actions</th>
+                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">
+                                        Image
+                                    </th>
+                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">
+                                        Product
+                                    </th>
+                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">
+                                        Category
+                                    </th>
+                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">
+                                        Price
+                                    </th>
+                                    <th className="px-6 py-5 text-left text-xs font-medium text-emerald-300 uppercase tracking-wider">
+                                        Stock
+                                    </th>
+                                    <th className="px-6 py-5 text-right text-xs font-medium text-emerald-300 uppercase tracking-wider">
+                                        Actions
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody className="divide-y divide-emerald-800/40">
-                                {filteredProducts.map(product => (
-                                    <tr
-                                        key={product.id}
-                                        className="hover:bg-emerald-950/50 transition-colors"
-                                    >
+                                {filteredProducts.map((product) => (
+                                    <tr key={product.id} className="hover:bg-emerald-950/50 transition-colors">
                                         <td className="px-6 py-5 whitespace-nowrap">
                                             <div className="h-14 w-14 rounded-lg overflow-hidden bg-emerald-950 border border-emerald-800/50 shadow-inner">
-                                                {product.imageUrl ? (
-                                                    <img
-                                                        src={`http://localhost:8080${product.imageUrl}`}
-                                                        alt={product.name}
-                                                        className="h-full w-full object-cover"
-                                                        onError={e => {
-                                                            (e.target as HTMLImageElement).src = "/images/placeholder-product.jpg";
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <div className="h-full w-full flex items-center justify-center text-emerald-600 text-xs font-medium">
-                                                        No image
-                                                    </div>
-                                                )}
+                                                <img
+                                                    src={
+                                                        product.imageUrl
+                                                            ? `${API_BASE}${product.imageUrl}`
+                                                            : PLACEHOLDER_IMAGE
+                                                    }
+                                                    alt={product.name}
+                                                    className="h-full w-full object-cover"
+                                                    onError={(e) => {
+                                                        const img = e.currentTarget;
+                                                        img.onerror = null; // prevent infinite retry loop
+                                                        img.src = "https://placehold.co/300x300?text=No+Image";
+                                                    }}
+                                                />
                                             </div>
                                         </td>
                                         <td className="px-6 py-5">
@@ -192,15 +209,17 @@ export default function AdminProductsPage() {
                                             ৳ {product.price.toLocaleString()}
                                         </td>
                                         <td className="px-6 py-5 whitespace-nowrap">
-                                                <span className={`inline-flex px-3 py-1.5 text-xs font-medium rounded-full ${
-                                                    product.stock > 10
-                                                        ? "bg-emerald-950/60 text-emerald-300 border border-emerald-700/50"
-                                                        : product.stock > 0
-                                                            ? "bg-amber-950/60 text-amber-300 border border-amber-800/50"
-                                                            : "bg-red-950/60 text-red-300 border border-red-800/50"
-                                                }`}>
-                                                    {product.stock} in stock
-                                                </span>
+                        <span
+                            className={`inline-flex px-3 py-1.5 text-xs font-medium rounded-full ${
+                                product.stock > 10
+                                    ? "bg-emerald-950/60 text-emerald-300 border border-emerald-700/50"
+                                    : product.stock > 0
+                                        ? "bg-amber-950/60 text-amber-300 border border-amber-800/50"
+                                        : "bg-red-950/60 text-red-300 border border-red-800/50"
+                            }`}
+                        >
+                          {product.stock} in stock
+                        </span>
                                         </td>
                                         <td className="px-6 py-5 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex items-center justify-end gap-5">

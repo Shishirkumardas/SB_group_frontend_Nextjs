@@ -18,50 +18,50 @@ export default function AboutUsPage() {
             {
                 name: "Topan Kumar Biswas",
                 position: "Managing Director",
-                image: "/images/placeholder-leader.jpg",
+                image: "/images/tapan.jpg",
                 bio: "Oversees overall operations, business development, and execution of group strategies.",
             },
             {
                 name: "Atikur Rahman",
-                position: "Deputy Managing Director",
+                position: "Chief Executive Officer(CEO)",
                 image: "/images/atikur_rahman.jpeg",
                 bio: "Leads daily management, cross-functional coordination, and performance optimization.",
             },
             {
                 name: "Md. Saidur Rahman",
-                position: "Director - Healthcare & Pharmaceuticals",
+                position: "Deputy Managing director",
                 image: "/images/saidur.jpg",
                 bio: "Responsible for healthcare initiatives, quality standards, and pharmaceutical innovation.",
             },
             {
                 name: "Md. Habibur Rahman",
-                position: "Director - Healthcare & Pharmaceuticals",
+                position: "Assistant Managing Director",
                 image: "/images/habibur.jpg",
                 bio: "Responsible for healthcare initiatives, quality standards, and pharmaceutical innovation.",
             },
             {
                 name: "Sarmin Azan Muskan",
-                position: "Chief Executive Officer (Marketing)",
+                position: "Chief Organizer (Marketing)",
                 image: "/images/muskan.jpg",
                 bio: "Manages financial strategy, compliance, and sustainable growth planning.",
             },
             {
                 name: "Mahfuzur Rahman",
                 position: "Head Of IT & ADMIN",
-                image: "/images/placeholder-leader.jpg",
+                image: "/images/mahfuzR.jpg",
                 bio: "Drives infrastructure projects, housing developments, and engineering excellence.",
             },
         ],
         additional_directors: [
             {
                 name: "Md. Saidur Rahman",
-                position: "Director - Healthcare & Pharmaceuticals",
+                position: "Deputy Managing Director",
                 image: "/images/placeholder-leader.jpg",
                 bio: "Responsible for healthcare initiatives, quality standards, and pharmaceutical innovation.",
             },
             {
                 name: "Md. Habibur Rahman",
-                position: "Director - Healthcare & Pharmaceuticals",
+                position: "Assistant Managing director",
                 image: "/images/placeholder-leader.jpg",
                 bio: "Responsible for healthcare initiatives, quality standards, and pharmaceutical innovation.",
             },
@@ -69,7 +69,7 @@ export default function AboutUsPage() {
         executives: [
             {
                 name: "Sarmin Azan Muskan",
-                position: "Chief Executive Officer (Marketing)",
+                position: "Chief Organizer (CO)",
                 image: "/images/muskan.jpg",
                 bio: "Manages financial strategy, compliance, and sustainable growth planning.",
             },
@@ -83,26 +83,26 @@ export default function AboutUsPage() {
         IT_Account: [
             {
                 name: "Shishir Kumar Das",
-                position: "Head of Human Resources",
+                position: "Executive Software Developer",
                 image: "/images/shishir.jpg",
                 bio: "Focuses on talent development, employee welfare, and organizational culture.",
             },
             {
                 name: "Taslima Akand",
-                position: "Head of Operations",
+                position: "Senior Executive Operations",
                 image: "/images/taslima_akand.jpeg",
                 bio: "Ensures smooth operations across all sister concerns and efficiency improvements.",
             },
             {
                 name: "Sadia Zaman",
-                position: "Head of Operations",
+                position: "Executive Officer",
                 image: "/images/sadia_zaman.jpeg",
                 bio: "Ensures smooth operations across all sister concerns and efficiency improvements.",
             },
             {
                 name: "Salafi Sabbir",
-                position: "Head of Operations",
-                image: "/images/placeholder-leader.jpg",
+                position: "IT Officer",
+                image: "/images/sabbir.jpg",
                 bio: "Ensures smooth operations across all sister concerns and efficiency improvements.",
             },
         ],
@@ -133,7 +133,7 @@ export default function AboutUsPage() {
             {/* Hero Section */}
             <section
                 className="relative h-[500px] md:h-[600px] bg-cover bg-center flex items-center justify-center text-center"
-                style={{ backgroundImage: "url('/about-hero.jpg')" }}
+                style={{ backgroundImage: "url('/images/njbl-hero.jpg')" }}
             >
                 <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-emerald-950/90" />
                 <div className="relative z-10 px-6 max-w-5xl">

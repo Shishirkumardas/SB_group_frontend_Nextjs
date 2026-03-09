@@ -2,7 +2,20 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, ChevronDown, ShoppingCart, Heart, User, LogOut } from "lucide-react";
+import {
+    Menu,
+    X,
+    ChevronDown,
+    ShoppingCart,
+    Heart,
+    User,
+    LogOut,
+    UserCheck,
+    Moon,
+    Home,
+    Package,
+    Truck, Users, Handshake, Sparkles, HeartHandshake, Store, ShieldCheck, Building2
+} from "lucide-react";
 import { useAuth } from "@/components/AuthContext"; // adjust path if needed
 
 // ────────────────────────────────────────────────
@@ -67,15 +80,111 @@ const mainCategories: Category[] = [
             {
                 title: "Shopping Mall",
                 items: [
-                    { name: "Shopping Mall Director", href: "/projects?sub=Shopping Mall Director" },
-                    { name: "Shopping Mall Share Holder", href: "/projects?sub=Shopping Mall Share Holder" },
+                    {
+                        name: "Shopping Mall Director",
+                        href: "/projects/shopping-mall-director",
+                        icon: Users
+                    },
+                    {
+                        name: "Shopping Mall Share Holder",
+                        href: "/projects/shopping-mall-share-holder",
+                        icon: Handshake
+                    },
+                    {
+                        name: "Shopping Mall Program",
+                        href: "/projects/shopping-mall-program",
+                        icon: Building2
+                    },
                 ],
             },
             {
-                title: "Root Authority",
+                title: "Core Systems",
                 items: [
-                    { name: "Dealer", href: "/projects?sub=Dealer" },
-                    { name: "Depo", href: "/projects?sub=Depo" },
+                    {
+                        name: "Root Authority",
+                        href: "/projects/root-authority",
+                        icon: ShieldCheck
+                    },
+                    {
+                        name: "Dealer Network",
+                        href: "/projects/dealer",
+                        icon: Store
+                    },
+                    {
+                        name: "Depo Management",
+                        href: "/projects/depo",
+                        icon: Package
+                    },
+                ],
+            },
+            {
+                title: "Partner & Reward Programs",
+                items: [
+                    {
+                        name: "ডিলার + নন-ডেলিভারি পার্টনার",
+                        href: "/projects/dealer-non-delivery-partner",
+                        icon: Handshake
+                    },
+                    {
+                        name: "দ্বিগুণ সুবিধা প্রোগ্রাম",
+                        href: "/projects/double-benefit-program",
+                        icon: Sparkles
+                    },
+                    {
+                        name: "আমৃত্যু সুবিধা v01",
+                        href: "/projects/amrityu-subidha",
+                        icon: HeartHandshake
+                    },
+                    {
+                        name: "নারী উদ্যোক্তা প্রোগ্রাম",
+                        href: "/projects/women-entrepreneur",
+                        icon: Users
+                    },
+                ],
+            },
+            {
+                title: "Delivery & Distribution",
+                items: [
+                    {
+                        name: "ডেলিভারি ফুড প্যাকেজ + রিওয়ার্ড",
+                        href: "/projects/delivery-food-package",
+                        icon: Package
+                    },
+                    {
+                        name: "ট্রাক সেল ফুড ডিস্ট্রিবিউশন",
+                        href: "/projects/truck-sale-food-distribution",
+                        icon: Truck
+                    },
+                ],
+            },
+            {
+                title: "Housing & Community",
+                items: [
+                    {
+                        name: "আপন হাউজিং",
+                        href: "/projects/apon-housing",
+                        icon: Home
+                    },
+                    {
+                        name: "আমার বাজার প্রকল্প",
+                        href: "/projects/amar-bazar",
+                        icon: ShoppingCart
+                    },
+                ],
+            },
+            {
+                title: "Special Campaigns",
+                items: [
+                    {
+                        name: "রমাদান প্রকল্প",
+                        href: "/projects/ramadan-project",
+                        icon: Moon
+                    },
+                    {
+                        name: "উন্নয়ন কর্মকর্তা সুবিধা",
+                        href: "/projects/development-officer-benefit",
+                        icon: UserCheck
+                    },
                 ],
             },
         ],
@@ -98,6 +207,7 @@ const adminLinks = [
     { name: "Manage Delivery", href: "/admin/orders" },
     { name: "Order Dashboard", href: "/order-dashboard" }, //cashback/cashback-export
     { name: "Export Cashback", href: "/cashback/cashback-export" }, //dashboard/excel-upload
+    { name: "Export Cashback P", href: "/cashback/cashback-export-purchase" },
     { name: "Upload Master Data", href: "/dashboard/excel-upload" },
     { name: "Cashback Payout Update", href: "/cashback_payout_update" },
     { name: "Master Data", href: "/master-data" },
