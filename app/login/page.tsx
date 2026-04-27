@@ -33,7 +33,7 @@ export default function LoginPage() {
 
             const data = await res.json();
 
-            // 🔥 Refresh auth context so Navbar updates immediately
+
             await refreshAuth();
 
             // Redirect based on role

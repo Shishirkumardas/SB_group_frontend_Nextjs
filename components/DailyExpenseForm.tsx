@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createExpense } from "@/lib/api";
+import { useState } from "react";
+// import { createExpense } from "@/lib/api";
 
 // interface Area {
 //     id: number;

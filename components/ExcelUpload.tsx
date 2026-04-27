@@ -44,7 +44,7 @@ export default function ExcelUploadPage() {
         try {
             const token = localStorage.getItem("jwtToken");
 
-            await axios.post(`${API_ROOT}/file-upload/upload-payout-excel`, formData, {
+            await axios.post(`${API_ROOT}/file-upload/excel/import`, formData, {
                 headers: token
                     ? { Authorization: `Bearer ${token}` } // only send Auth header
                     : undefined,
@@ -83,7 +83,7 @@ export default function ExcelUploadPage() {
         <div className="min-h-screen bg-emerald-950 flex items-center justify-center px-4 py-12">
             <div className="w-full max-w-lg bg-emerald-900/40 backdrop-blur-md border border-emerald-800/50 rounded-2xl shadow-2xl p-8">
                 <h1 className="text-3xl font-serif font-bold text-emerald-100 text-center mb-8">
-                    Excel Import (Cashback Payout Update)
+                    Excel Import (Master Data & Cashback)
                 </h1>
 
                 <input

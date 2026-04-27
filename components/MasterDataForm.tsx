@@ -15,7 +15,7 @@ export default function MasterDataForm({
     const [name, setName] = useState("");
     const [areaId, setAreaId] = useState("");
     const [paymentMethod, setPaymentMethod] = useState("");
-    const [bkash, setBkash] = useState("");
+    const [bkash] = useState("");
     const [date, setDate] = useState("");
     const [purchaseAmount, setPurchaseAmount] = useState("");
     const [paidAmount, setPaidAmount] = useState("");

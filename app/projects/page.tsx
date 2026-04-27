@@ -5,10 +5,17 @@ export default function ProjectsOverview() {
     const projects = [
         { slug: "shopping-mall", title: "Shopping Mall", description: "Premier retail & lifestyle destination" },
         { slug: "shopping-mall-director", title: "Shopping Mall Director", description: "Management & analytics portal" },
-        { slug: "shopping-mall-share-holder", title: "Shopping Mall Share Holder", description: "Investor dashboard" },
-        { slug: "root-authority", title: "Root Authority", description: "Central governance platform" },
+        { slug: "delivery-food-package", title: "Food Delivery with Customer Reward System", description: "Food" },
+        { slug: "double-benefit-program", title: "Double Advantage Reward & Benefit Program", description: "Double Advantage Reward & Benefit" },
+
+        { slug: "truck-sale-food-distribution", title: "Truck Sale Food Distribution Network", description: "Truck Sale Food Distribution" },
+        { slug: "ramadan-project", title: "Ramadan Special Project", description: "Ramadan Special" },
+        { slug: "apon-housing", title: "Apon Housing Project", description: "Apon Housing" },
+        { slug: "amar-bazar", title: "Amar Bazar Project", description: "Amar Bazar" },
+        { slug: "woman-entrepreneurship-program", title: "woman entrepreneurship program", description: "woman entrepreneurship" },
+        { slug: "development-officer-benefit", title: "Development Officer Benefit", description: "Development Officer" },
         { slug: "dealer", title: "Dealer Network", description: "Partner & dealer portal" },
-        { slug: "depo", title: "Depo Management", description: "Supply chain & logistics system" },
+        { slug: "amrityu-subidha", title: "Life Long Benefit", description: "Life Long Benefit" },
     ];
 
     return (

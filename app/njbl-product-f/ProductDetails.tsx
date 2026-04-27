@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams} from "next/navigation";
 import Link from "next/link";
 import { Loader2, ShoppingCart, X } from "lucide-react";
 // import { useAuth } from "@/components/AuthContext";   // ← comment out if not needed
@@ -54,7 +54,6 @@ const HARDCODED_PRODUCTS: Product[] = [
 export default function ProductDetails() {
     const params = useParams<{ id: string }>();
     const id = params.id;
-    const router = useRouter();
     // const { userId, isLoading: authLoading, refreshAuth } = useAuth();
 
     const [product, setProduct] = useState<Product | null>(null);

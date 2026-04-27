@@ -27,7 +27,7 @@ export default function Navbar() {
         }
     };
 
-    // ✅ Don't render anything until client-side
+
     if (!mounted) return null;
 
     if (isLoading)

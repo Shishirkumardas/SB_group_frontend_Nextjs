@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { use } from "react";
 
@@ -9,7 +8,7 @@ export default function PayPage({ params }: { params: Promise<{ id: string }> })
     const resolvedParams = use(params);
     const id = resolvedParams.id;
 
-    const router = useRouter();
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

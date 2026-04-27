@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const [role, setRole] = useState<"ADMIN" | "CUSTOMER" | null>(null);
-    const [email, setEmail] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
+    // const [email, setEmail] = useState<string | null>(null);
+    // const [loading, setLoading] = useState(true);
     const [userId, setUserId] = useState<string | null>(null);
     const [userPhone, setUserPhone] = useState<string | null>(null);
     const [userAddress, setUserAddress] = useState<string | null>(null);

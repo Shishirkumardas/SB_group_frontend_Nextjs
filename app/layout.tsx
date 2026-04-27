@@ -1,5 +1,6 @@
 
 import "./globals.css";
+// import GoogleTranslate from "@/components/GoogleTranslate";
 
 import Navbar from "@/context/Navbar";
 
@@ -16,7 +17,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="en" suppressHydrationWarning>
         <body>
         <AuthProvider>
-            <Navbar />
+            <Navbar/>
+            {/*<div className="fixed top-4 right-4 z-50">*/}
+            {/*    <GoogleTranslate/>*/}
+            {/*</div>*/}
+            <script
+                src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+                async
+            />
             {children}
         </AuthProvider>
         </body>

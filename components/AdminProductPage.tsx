@@ -1,7 +1,6 @@
 "use client";
-export const dynamic = "force-dynamic";
-import {useEffect, useState} from "react";
-import {useParams, useRouter} from "next/navigation";
+
+import { useState } from "react";
 import { Loader2, Upload, X } from "lucide-react";
 
 // Reuse categories from your Navbar (all included)
@@ -38,25 +37,10 @@ const mainCategories = [
     { title: "About Us", subcategories: [] }
 ];
 
-interface Product {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    category: string;
-    subCategory?: string;
-    brand?: string;
-    imageUrl?: string;
-    extraImages?: string[];
-}
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 export default function AddProductPage() {
-    const router = useRouter();
-    const { id } = useParams() as { id: string };
+
 
     const [formData, setFormData] = useState({
-
         name: "",
         description: "",
         price: "",
@@ -78,53 +62,6 @@ export default function AddProductPage() {
 
     const currentCategory = mainCategories.find((c) => c.title === formData.category);
     const availableSubCategories = currentCategory?.subcategories || [];
-
-    // Fetch product
-    useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                setLoading(true);
-                const res = await fetch(`${API_BASE}/api/products/${id}`, {
-                    credentials: "include",
-                });
-
-                if (!res.ok) {
-                    if (res.status === 401) {
-                        setError("Please log in to continue");
-                        router.push("/login?redirect=/admin/products/edit/" + id);
-                        return;
-                    }
-                    throw new Error(`Failed to load product (status ${res.status})`);
-                }
-
-                const product: Product = await res.json();
-
-                setFormData({
-                    name: product.name || "",
-                    description: product.description || "",
-                    price: product.price?.toString() || "",
-                    stock: product.stock?.toString() || "",
-                    category: product.category || "",
-                    subCategory: product.subCategory || "",
-                    brand: product.brand || "SB GROUP",
-                });
-
-                if (product.imageUrl) {
-                    setMainImagePreview(`${API_BASE}${product.imageUrl}`);
-                }
-
-                if (product.extraImages?.length) {
-                    setExtraImagesPreview(product.extraImages.map((url) => `${API_BASE}${url}`));
-                }
-            } catch (err: any) {
-                setError(err.message || "Could not load product details");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (id) fetchProduct();
-    }, [id, router]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -167,7 +104,7 @@ export default function AddProductPage() {
         );
 
         if (validFiles.length < files.length) {
-            setError("Some files skipped (only images = 50MB allowed)");
+            setError("Some files skipped (only images ≤ 50MB allowed)");
         }
 
         setExtraImageFiles((prev) => [...prev, ...validFiles]);
@@ -222,7 +159,7 @@ export default function AddProductPage() {
                 data.append("images", file);
             });
 
-            const res = await fetch(`http://localhost:8080/api/admin/products/${id}`, {
+            const res = await fetch("http://localhost:8080/api/admin/products", {
                 method: "POST",
                 body: data,
                 credentials: "include",
@@ -312,7 +249,7 @@ export default function AddProductPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-medium text-emerald-300 mb-2">
-                                Price (?) *
+                                Price (৳) *
                             </label>
                             <input
                                 type="number"

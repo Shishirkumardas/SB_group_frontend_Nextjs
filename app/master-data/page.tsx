@@ -50,23 +50,23 @@ export default function MasterDataPage() {
         }
     };
 
-    const deleteItem = async (id: number) => {
-        if (!confirm("Are you sure you want to delete this record?")) return;
-
-        setLoading(true);
-        try {
-            const res = await fetch(`${API_URL}/${id}`, {
-                method: "DELETE",
-                credentials: "include",
-            });
-            if (!res.ok) throw new Error("Failed to delete item");
-            fetchData();
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const deleteItem = async (id: number) => {
+    //     if (!confirm("Are you sure you want to delete this record?")) return;
+    //
+    //     setLoading(true);
+    //     try {
+    //         const res = await fetch(`${API_URL}/${id}`, {
+    //             method: "DELETE",
+    //             credentials: "include",
+    //         });
+    //         if (!res.ok) throw new Error("Failed to delete item");
+    //         fetchData();
+    //     } catch (err) {
+    //         console.error(err);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const deleteAll = async () => {
         if (!confirm("⚠️ WARNING: This will DELETE ALL master data and related cashback payments permanently. Are you absolutely sure?")) {

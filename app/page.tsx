@@ -6,7 +6,6 @@ import {
     ArrowRight,
     Building2,
     HeartPulse,
-    Users,
     Globe,
     Briefcase,
     GraduationCap,
@@ -20,34 +19,42 @@ import {
     Phone,
     Facebook,
     Linkedin,
-    Youtube
+    Youtube,
 } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion"; // For animations
-import { Swiper, SwiperSlide } from 'swiper/react'; // For carousels
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules'; // Swiper modules
+import { motion } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
 export default function SBGroupLanding() {
-    const [stats, setStats] = useState({ employees: 0, medicines: 0, exports: 0, generics: 0 });
+    const [stats, setStats] = useState({
+        employees: 0,
+        medicines: 0,
+        exports: 0,
+        generics: 0,
+    });
 
     useEffect(() => {
-        // Animate stats counters (inspired by HPL stats)
         const animateStats = () => {
-            const target = { employees: 500, medicines: 200, exports: 5, generics: 100 }; // Placeholder values
-            const duration = 2000;
-            const steps = 60;
-            const increment = {
-                employees: 0,
-                medicines: 0,
-                exports: 0,
-                generics: 0
+            const target = {
+                employees: 60,
+                medicines: 30,
+                exports: 10,
+                generics: 30,
             };
 
-            Object.keys(target).forEach(key => {
-                increment[key] = target[key] / steps;
-            });
+            const duration = 2000;
+            const steps = 60;
+
+            // Explicit increments — no unsafe string indexing
+            const increment = {
+                employees: target.employees / steps,
+                medicines: target.medicines / steps,
+                exports: target.exports / steps,
+                generics: target.generics / steps,
+            };
 
             let currentStep = 0;
             const interval = setInterval(() => {
@@ -55,12 +62,14 @@ export default function SBGroupLanding() {
                     clearInterval(interval);
                     return;
                 }
-                setStats(prev => ({
+
+                setStats((prev) => ({
                     employees: Math.min(prev.employees + increment.employees, target.employees),
                     medicines: Math.min(prev.medicines + increment.medicines, target.medicines),
                     exports: Math.min(prev.exports + increment.exports, target.exports),
                     generics: Math.min(prev.generics + increment.generics, target.generics),
                 }));
+
                 currentStep++;
             }, duration / steps);
         };
@@ -70,7 +79,7 @@ export default function SBGroupLanding() {
 
     return (
         <div className="min-h-screen bg-emerald-950 text-emerald-50 overflow-x-hidden">
-            {/* Hero - Full viewport immersive with subtle parallax */}
+            {/* Hero */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <motion.div
                     className="absolute inset-0 bg-cover bg-center"
@@ -87,6 +96,7 @@ export default function SBGroupLanding() {
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 1.5}}
                 >
+                    <span className="notranslate">
                     <motion.h1
                         className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-extrabold tracking-tight mb-6 md:mb-8 drop-shadow-2xl"
                         initial="hidden"
@@ -95,12 +105,14 @@ export default function SBGroupLanding() {
                             hidden: {opacity: 0},
                             visible: {
                                 opacity: 1,
-                                transition: {
-                                    staggerChildren: 0.12,   // delay between each letter
-                                },
+                                transition: {staggerChildren: 0.12},
                             },
                         }}
                     >
+
+                        {/* Hidden readable text for Google Translate */}
+                        <span className="sr-only">SB Group</span>
+
                         {"SB Group".split("").map((char, index) => (
                             <motion.span
                                 key={index}
@@ -116,7 +128,7 @@ export default function SBGroupLanding() {
                                 }}
                                 whileHover={{
                                     scale: 1.08,
-                                    textShadow: "0 0 30px rgba(52, 211, 153, 0.7)", // emerald glow
+                                    textShadow: "0 0 30px rgba(52, 211, 153, 0.7)",
                                     transition: {duration: 0.4},
                                 }}
                             >
@@ -124,6 +136,7 @@ export default function SBGroupLanding() {
                             </motion.span>
                         ))}
                     </motion.h1>
+                        </span>
 
                     <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-emerald-200 mb-10 md:mb-14 max-w-4xl mx-auto leading-tight drop-shadow-lg">
                         Healthcare • Education • Housing • Hospitality • Construction • Innovation
@@ -147,7 +160,6 @@ export default function SBGroupLanding() {
                     </div>
                 </motion.div>
 
-                {/* Scroll hint with animation */}
                 <motion.div
                     className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center"
                     initial={{opacity: 0}}
@@ -162,13 +174,13 @@ export default function SBGroupLanding() {
                 </motion.div>
             </section>
 
-            {/* Quick Pillars Overview - with fade-in on scroll */}
+            {/* Core Pillars */}
             <section className="py-20 md:py-28 px-6 bg-gradient-to-b from-emerald-950 to-emerald-900/80">
                 <div className="max-w-7xl mx-auto">
                     <motion.h2
                         className="text-4xl md:text-5xl font-serif font-bold text-center text-emerald-100 mb-16"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={{opacity: 0, y: 50}}
+                        whileInView={{opacity: 1, y: 0}}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
                     >
@@ -196,74 +208,104 @@ export default function SBGroupLanding() {
                                 whileHover={{ scale: 1.05 }}
                             >
                                 <pillar.icon className="h-14 w-14 mx-auto mb-6 text-emerald-400 group-hover:scale-110 transition-transform" />
-                                <h3 className="text-2xl font-serif font-bold text-emerald-100 mb-4 text-center">
-                                    {pillar.title}
-                                </h3>
-                                <p className="text-emerald-300 text-center">
-                                    {pillar.desc}
-                                </p>
+                                <h3 className="text-2xl font-serif font-bold text-emerald-100 mb-4 text-center">{pillar.title}</h3>
+                                <p className="text-emerald-300 text-center">{pillar.desc}</p>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Added: Stats Section - Inspired by HPL, with animated counters */}
+            {/* Stats Section */}
             <section className="py-20 md:py-28 px-6 bg-emerald-900/50">
                 <div className="max-w-7xl mx-auto text-center">
                     <motion.h2
                         className="text-4xl md:text-5xl font-serif font-bold text-emerald-100 mb-16"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        initial={{opacity: 0, y: 50}}
+                        whileInView={{opacity: 1, y: 0}}
+                        viewport={{once: true}}
+                        transition={{duration: 0.8}}
                     >
                         Our Impact in Numbers
                     </motion.h2>
-
+                    <span className="notranslate">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
                         {[
-                            { label: "Dedicated Team", value: Math.round(stats.employees), suffix: "+" },
-                            { label: "Lives Impacted", value: Math.round(stats.medicines), suffix: "K+" },
-                            { label: "Projects Completed", value: Math.round(stats.exports), suffix: "+" },
-                            { label: "Years of Excellence", value: Math.round(stats.generics), suffix: "+" },
+                            {label: "Dedicated Team", value: Math.round(stats.employees), suffix: "+"},
+                            {label: "Lives Impacted", value: Math.round(stats.medicines), suffix: "K+"},
+                            {label: "Projects Completed", value: Math.round(stats.exports), suffix: "+"},
+                            {label: "Years of Excellence", value: Math.round(stats.generics), suffix: "+"},
                         ].map((stat, i) => (
                             <motion.div
                                 key={i}
                                 className="p-8 bg-emerald-900/40 rounded-2xl border border-emerald-800/50"
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, delay: i * 0.2 }}
+                                initial={{opacity: 0, scale: 0.9}}
+                                whileInView={{opacity: 1, scale: 1}}
+                                viewport={{once: true}}
+                                transition={{duration: 0.8, delay: i * 0.2}}
                             >
                                 <div className="text-5xl font-bold text-emerald-100 mb-2">
-                                    {stat.value}{stat.suffix}
+                                    {stat.value}
+                                    {stat.suffix}
                                 </div>
                                 <div className="text-emerald-300 text-xl">{stat.label}</div>
                             </motion.div>
                         ))}
                     </div>
+                        </span>
                 </div>
             </section>
 
-            {/* Sister Concerns Teaser - Now as dynamic carousel/slider */}
+            {/* Shopping Mall Gallery */}
+            <section className="py-16 px-6 bg-emerald-950">
+                <div className="max-w-7xl mx-auto text-center">
+
+                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-emerald-100 mb-10">
+                        Our Shopping Mall Projects
+                    </h2>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[
+                            "/images/mall1.jpg",
+                            "/images/mall2.jpg",
+                            "/images/mall3.jpg",
+                        ].map((src, i) => (
+                            <div
+                                key={i}
+                                className="group overflow-hidden rounded-2xl border border-emerald-800/50 shadow-xl"
+                            >
+                                <img
+                                    src={src}
+                                    alt={`Shopping Mall ${i + 1}`}
+                                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                </div>
+            </section>
+
+            {/* Sister Concerns */}
             <section className="py-20 md:py-28 px-6">
                 <div className="max-w-7xl mx-auto text-center">
+                    <span className="notranslate">
                     <motion.h2
                         className="text-4xl md:text-5xl font-serif font-bold text-emerald-100 mb-6"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        initial={{opacity: 0, y: 50}}
+                        whileInView={{opacity: 1, y: 0}}
+                        viewport={{once: true}}
+                        transition={{duration: 0.8}}
                     >
                         Our Sister Concerns
                     </motion.h2>
+                        </span>
                     <motion.p
                         className="text-xl text-emerald-300 mb-16 max-w-3xl mx-auto"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
+                        initial={{opacity: 0, y: 50}}
+                        whileInView={{opacity: 1, y: 0}}
+                        viewport={{once: true}}
+                        transition={{duration: 0.8, delay: 0.2}}
                     >
                         Nine dynamic companies working together to shape a better future.
                     </motion.p>
@@ -273,26 +315,50 @@ export default function SBGroupLanding() {
                         spaceBetween={20}
                         slidesPerView={1}
                         breakpoints={{
-                            640: { slidesPerView: 2 },
-                            768: { slidesPerView: 3 },
-                            1024: { slidesPerView: 4 },
-                            1280: { slidesPerView: 5 },
+                            640: {slidesPerView: 2},
+                            768: {slidesPerView: 3},
+                            1024: {slidesPerView: 4},
+                            1280: {slidesPerView: 5},
                         }}
                         navigation
-                        pagination={{ clickable: true }}
-                        autoplay={{ delay: 3000, disableOnInteraction: false }}
+                        pagination={{clickable: true}}
+                        autoplay={{delay: 3000, disableOnInteraction: false}}
                         className="pb-12"
                     >
                         {[
-                            { name: "SB Medical", href: "/sister-concern/sb-medical", desc: "Advanced healthcare solutions" },
-                            { name: "SB Education", href: "/sister-concern/sb-society", desc: "Quality education programs" },
-                            { name: "RM Apon Housing", href: "/sister-concern/apon-housing", desc: "Affordable housing developments" },
-                            { name: "SB Hotel", href: "/sister-concern/sb-hotel", desc: "Luxury hospitality services" },
-                            { name: "SB Resort", href: "/sister-concern/sb-resort", desc: "Premium resort experiences" },
-                            { name: "SB Developer", href: "/sister-concern/sb-developer", desc: "Real estate innovation" },
-                            { name: "SB Construction", href: "/sister-concern/sb-construction", desc: "Infrastructure expertise" },
-                            { name: "SB Cosmetics", href: "/sister-concern/sb-cosmetics", desc: "Natural beauty products" },
-                            { name: "SB Pharma", href: "/sister-concern/sb-pharma", desc: "Pharmaceutical advancements" },
+                            {
+                                name: "SB Medical",
+                                href: "/sister-concern/sb-medical",
+                                desc: "Advanced healthcare solutions"
+                            },
+                            {
+                                name: "SB Education",
+                                href: "/sister-concern/sb-society",
+                                desc: "Quality education programs"
+                            },
+                            {
+                                name: "RM Apon Housing",
+                                href: "/sister-concern/apon-housing",
+                                desc: "Affordable housing developments"
+                            },
+                            {name: "SB Hotel", href: "/sister-concern/sb-hotel", desc: "Luxury hospitality services"},
+                            {name: "SB Resort", href: "/sister-concern/sb-resort", desc: "Premium resort experiences"},
+                            {
+                                name: "SB Developer",
+                                href: "/sister-concern/sb-developer",
+                                desc: "Real estate innovation"
+                            },
+                            {
+                                name: "SB Construction",
+                                href: "/sister-concern/sb-construction",
+                                desc: "Infrastructure expertise"
+                            },
+                            {
+                                name: "SB Cosmetics",
+                                href: "/sister-concern/sb-cosmetics",
+                                desc: "Natural beauty products"
+                            },
+                            {name: "SB Pharma", href: "/sister-concern/sb-pharma", desc: "Pharmaceutical advancements"},
                         ].map((item, i) => (
                             <SwiperSlide key={i}>
                                 <Link
@@ -310,23 +376,23 @@ export default function SBGroupLanding() {
 
                     <motion.div
                         className="mt-12"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        initial={{opacity: 0, y: 50}}
+                        whileInView={{opacity: 1, y: 0}}
+                        viewport={{once: true}}
+                        transition={{duration: 0.8}}
                     >
                         <Link
                             href="/sister-concern"
                             className="inline-flex items-center gap-3 text-emerald-400 hover:text-emerald-300 text-xl font-medium transition"
                         >
                             View All Sister Concerns
-                            <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                            <ArrowRight className="group-hover:translate-x-2 transition-transform"/>
                         </Link>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Added: Newsroom/Updates Section - Inspired by HPL newsroom, as carousel */}
+            {/* Latest Updates */}
             <section className="py-20 md:py-28 px-6 bg-gradient-to-b from-emerald-900/80 to-emerald-950">
                 <div className="max-w-7xl mx-auto text-center">
                     <motion.h2
@@ -362,18 +428,19 @@ export default function SBGroupLanding() {
                         className="pb-12"
                     >
                         {[
-                            { title: "New Hospital Launch in Dhaka", date: "2026-01-15", desc: "SB Medical opens state-of-the-art facility with advanced care services." },
-                            { title: "Education Partnership Announced", date: "2025-12-20", desc: "Collaborating with top universities for skill development programs." },
-                            { title: "Sustainable Housing Project", date: "2025-11-10", desc: "RM Apon Housing breaks ground on eco-friendly residential complex." },
-                            { title: "Innovation in Cosmetics", date: "2025-10-05", desc: "SB Cosmetics launches new natural product line." },
-                            { title: "Global Export Milestone", date: "2025-09-01", desc: "SB Pharma reaches 10 countries with quality pharmaceuticals." },
-                        ].map((news, i) => (
+                            { title: "New Journey Shopping Malls Inagurated in Gazipur", date: "2026-01-15", desc: "New Journey Shopping Mall Inagurated in Gazipur" },
+                            { title: "Amar Bazar Inagurated In Tangail", date: "2025-12-20", desc: "Amar Bazar Inagurated In Tangail" },
+                            { title: "Development Seminar in Kaliakoir, Gazipur", date: "2025-11-10", desc: "Development Seminar in Kaliakoir, Gazipur" },
+                            ].map((news, i) => (
                             <SwiperSlide key={i}>
                                 <div className="bg-emerald-900/40 backdrop-blur-md rounded-2xl p-6 border border-emerald-800/50 h-full">
                                     <h3 className="text-xl font-bold text-emerald-100 mb-2">{news.title}</h3>
                                     <p className="text-emerald-400 text-sm mb-4">{news.date}</p>
                                     <p className="text-emerald-300 mb-4">{news.desc}</p>
-                                    <Link href="#" className="text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1">
+                                    <Link
+                                        href="#"
+                                        className="text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1"
+                                    >
                                         Read More <ChevronRight size={16} />
                                     </Link>
                                 </div>
@@ -383,7 +450,7 @@ export default function SBGroupLanding() {
                 </div>
             </section>
 
-            {/* Chairman's Message Teaser - with fade-in */}
+            {/* Chairman's Message */}
             <section className="py-20 md:py-28 px-6 bg-emerald-900/30">
                 <div className="max-w-5xl mx-auto text-center">
                     <motion.h2
@@ -404,9 +471,7 @@ export default function SBGroupLanding() {
                         transition={{ duration: 0.8 }}
                     >
                         <p className="text-xl md:text-2xl text-emerald-100 leading-relaxed mb-10 font-light italic">
-                            "Our mission has always been simple yet profound: to build institutions and opportunities
-                            that serve people first. Every project, every product, every life we touch — is a step
-                            toward a better tomorrow for Bangladesh."
+                            "Our mission has always been simple yet profound: to build institutions and opportunities that serve people first. Every project, every product, every life we touch — is a step toward a better tomorrow for Bangladesh."
                         </p>
 
                         <div className="flex flex-col md:flex-row items-center justify-center gap-6">
@@ -418,12 +483,8 @@ export default function SBGroupLanding() {
                                 />
                             </div>
                             <div className="text-left">
-                                <h3 className="text-2xl font-serif font-bold text-emerald-100">
-                                    Shuvo Chowdhury
-                                </h3>
-                                <p className="text-lg text-emerald-300">
-                                    Chairman, SB Group
-                                </p>
+                                <h3 className="text-2xl font-serif font-bold text-emerald-100">Shuvo Chowdhury</h3>
+                                <p className="text-lg text-emerald-300">Chairman, SB Group</p>
                             </div>
                         </div>
                     </motion.div>
@@ -446,7 +507,7 @@ export default function SBGroupLanding() {
                 </div>
             </section>
 
-            {/* Added: Testimonials Section - Inspired by leader messages on HPL */}
+            {/* Testimonials */}
             <section className="py-20 md:py-28 px-6 bg-emerald-950">
                 <div className="max-w-7xl mx-auto text-center">
                     <motion.h2
@@ -462,20 +523,22 @@ export default function SBGroupLanding() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                         {[
                             {
-                                quote: "Quality and innovation are at the heart of everything we do at SB Group.",
-                                name: "Alauddin Ahmed",
-                                position: "Managing Director"
+                                quote: "We strive for excellence in serving our communities and partners.",
+                                name: "MD Solaiman Hossain",
+                                position: "Managing Director(NJBL)",
                             },
                             {
                                 quote: "Our team is dedicated to creating positive change in every sector we touch.",
-                                name: "Muhammad Halimuzzaman",
-                                position: "DMD & CEO"
+                                name: "Atikur Rahman",
+                                position: "CEO",
                             },
                             {
-                                quote: "We strive for excellence in serving our communities and partners.",
-                                name: "Suraya Bilkis",
-                                position: "Chairperson"
-                            },
+                                quote: "Quality and innovation are at the heart of everything we do at SB Group.",
+                                name: "Tapan Kumar Biswas",
+                                position: "Managing Director(SB Group)",
+                            }
+
+
                         ].map((testimonial, i) => (
                             <motion.div
                                 key={i}
@@ -488,7 +551,7 @@ export default function SBGroupLanding() {
                                 <Quote className="h-8 w-8 text-emerald-400 mb-4" />
                                 <p className="text-emerald-200 mb-6 italic">{testimonial.quote}</p>
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-emerald-800" /> {/* Placeholder avatar */}
+                                    <div className="w-12 h-12 rounded-full bg-emerald-800" />
                                     <div>
                                         <h4 className="text-emerald-100 font-bold">{testimonial.name}</h4>
                                         <p className="text-emerald-300 text-sm">{testimonial.position}</p>
@@ -500,7 +563,7 @@ export default function SBGroupLanding() {
                 </div>
             </section>
 
-            {/* Added: Video Section - For company overview, inspired by potential media on HPL */}
+            {/* Video Section */}
             <section className="py-20 md:py-28 px-6 bg-gradient-to-b from-emerald-900/30 to-emerald-950">
                 <div className="max-w-5xl mx-auto text-center">
                     <motion.h2
@@ -523,17 +586,17 @@ export default function SBGroupLanding() {
                         <iframe
                             width="100%"
                             height="100%"
-                            src="https://www.youtube.com/embed/your-video-id" // Replace with actual SB Group video ID
+                            src="https://www.youtube.com/embed/N80qcoVD9X0"
                             title="SB Group Overview"
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
-                        ></iframe>
+                        />
                     </motion.div>
                 </div>
             </section>
 
-            {/* Final CTA - with animation */}
+            {/* Final CTA */}
             <section className="py-24 px-6 bg-gradient-to-b from-emerald-950 via-emerald-900/50 to-emerald-950">
                 <div className="max-w-5xl mx-auto text-center">
                     <motion.h2
@@ -552,8 +615,7 @@ export default function SBGroupLanding() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        From healthcare to housing, from education to enterprise — SB Group is committed to creating
-                        meaningful impact across Bangladesh.
+                        From healthcare to housing, from education to enterprise — SB Group is committed to creating meaningful impact across Bangladesh.
                     </motion.p>
 
                     <motion.div
@@ -564,7 +626,7 @@ export default function SBGroupLanding() {
                         transition={{ duration: 0.8, delay: 0.4 }}
                     >
                         <Link
-                            href="https://api.whatsapp.com/send?phone=%2B8801901926127&fbclid=IwY2xjawPkLbNleHRuA2FlbQIxMABicmlkETF6M3dpSkxEc3M2UkRxZjhIc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHhmOB5jKCalBTyaGvaNoTK7UMLlA4H2-K9aAhbemuu-PZ0dw7B9J8FoCpLIN_aem_Qq1XCDhSWcD_uZ-t0X6DZA"
+                            href="https://www.facebook.com/sb.njbl"
                             className="bg-emerald-700 hover:bg-emerald-600 text-white px-12 py-6 rounded-full text-xl font-medium transition shadow-2xl hover:shadow-3xl hover:scale-105"
                         >
                             Contact Us Today
@@ -579,23 +641,37 @@ export default function SBGroupLanding() {
                 </div>
             </section>
 
-            {/* Footer - Enhanced with social icons and map */}
+            {/* Footer */}
             <footer className="bg-emerald-950 border-t border-emerald-800/50 py-16 px-6">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
                     <div>
                         <h3 className="text-2xl font-serif font-bold text-emerald-100 mb-6">SB Group</h3>
-                        <p className="text-emerald-400">
-                            Building trust. Creating value. Serving Bangladesh.
-                        </p>
+                        <p className="text-emerald-400">Building trust. Creating value. Serving Bangladesh.</p>
                     </div>
 
                     <div>
                         <h4 className="text-lg font-medium text-emerald-200 mb-6">Quick Links</h4>
                         <ul className="space-y-3 text-emerald-300">
-                            <li><Link href="/about" className="hover:text-emerald-200 transition">About Us</Link></li>
-                            <li><Link href="/sister-concern" className="hover:text-emerald-200 transition">Sister Concerns</Link></li>
-                            <li><Link href="/projects" className="hover:text-emerald-200 transition">Projects</Link></li>
-                            <li><Link href="/njbl-products" className="hover:text-emerald-200 transition">NJBL Products</Link></li>
+                            <li>
+                                <Link href="/about" className="hover:text-emerald-200 transition">
+                                    About Us
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/sister-concern" className="hover:text-emerald-200 transition">
+                                    Sister Concerns
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/projects" className="hover:text-emerald-200 transition">
+                                    Projects
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/njbl-product-f" className="hover:text-emerald-200 transition">
+                                    NJBL Products
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 
@@ -616,7 +692,6 @@ export default function SBGroupLanding() {
                             <p className="text-emerald-400">+880 01901-926127</p>
                         </div>
 
-                        {/* Google Maps Embed */}
                         <div className="mt-6 overflow-hidden rounded-xl border border-emerald-800/50 shadow-lg">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.617806960991!2d90.42356747623464!3d23.796620478638925!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c70054741e73%3A0xdc7dc79f2689d066!2sNJBL%20Corporate%20Office!5e0!3m2!1sen!2sbd!4v1770536979025!5m2!1sen!2sbd"
@@ -627,20 +702,26 @@ export default function SBGroupLanding() {
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"
                                 title="SB Group Location - Baridhara, Dhaka"
-                            ></iframe>
+                            />
                         </div>
                     </div>
 
                     <div>
                         <h4 className="text-lg font-medium text-emerald-200 mb-6">Follow Us</h4>
                         <div className="flex gap-6 justify-center md:justify-start">
-                            <a href="https://www.facebook.com/sb.njbl" className="text-emerald-400 hover:text-emerald-200 transition">
+                            <a
+                                href="https://www.facebook.com/sb.njbl"
+                                className="text-emerald-400 hover:text-emerald-200 transition"
+                            >
                                 <Facebook size={24} />
                             </a>
-                            <a href="https://www.linkedin.com/company/sb-group-bangladesh" className="text-emerald-400 hover:text-emerald-200 transition">
+                            <a
+                                href="https://www.linkedin.com/company/sb-group-bangladesh"
+                                className="text-emerald-400 hover:text-emerald-200 transition"
+                            >
                                 <Linkedin size={24} />
                             </a>
-                            <a href="https://www.youtube.com" className="text-emerald-400 hover:text-emerald-200 transition"> {/* Placeholder */}
+                            <a href="https://www.youtube.com/@NewjourneyBangladeshLimited" className="text-emerald-400 hover:text-emerald-200 transition">
                                 <Youtube size={24} />
                             </a>
                         </div>

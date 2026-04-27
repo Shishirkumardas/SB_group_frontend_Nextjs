@@ -1,0 +1,260 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
+import { useRouter } from "next/navigation";
+
+// Define colors for PieChart
+
+
+interface DashboardData {
+    totalPurchase: number;
+    totalPaid: number;
+    totalDue: number;
+    paidPercent: number;
+    totalCashbackPaid: number;
+    totalConsumers: number;
+    averagePurchase: number;
+}
+
+function StatCard({
+                      title,
+                      value,
+                      icon,
+                      color,
+                  }: {
+    title: string;
+    value: string;
+    icon: string;
+    color: string;
+}) {
+    const colorMap: Record<string, string> = {
+        emerald: "bg-emerald-100 text-emerald-800 border-emerald-200",
+        teal: "bg-teal-100 text-teal-800 border-teal-200",
+        amber: "bg-amber-100 text-amber-800 border-amber-200",
+        green: "bg-green-100 text-green-800 border-green-200",
+    };
+
+    return (
+        <div
+            className={`p-6 rounded-2xl shadow-lg border ${colorMap[color]} transition-transform hover:scale-105`}
+        >
+            <div className="flex items-center justify-between">
+                <div>
+                    <p className="text-sm font-medium opacity-80">{title}</p>
+                    <p className="text-3xl font-bold mt-2">{value}</p>
+                </div>
+                <span className="text-4xl opacity-70">{icon}</span>
+            </div>
+        </div>
+    );
+}
+
+export default function Dashboard() {
+    const [data, setData] = useState<DashboardData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await api.get("/dashboard/summary", {
+                    withCredentials: true,   // ✅ IMPORTANT FIX
+                });
+                setData(res.data);
+            } catch (err: any) {
+                console.error("Failed to load dashboard:", err);
+
+                if (err.response?.status === 403) {
+                    setError("Access Denied. Admins only.");
+                    setTimeout(() => router.push("/login"), 1500);
+                } else {
+                    setError("Failed to load dashboard data");
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [router]);
+
+    if (!mounted) return null;
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center">
+                <div className="text-emerald-700 text-2xl font-medium animate-pulse">
+                    Loading Dashboard...
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center">
+                <div className="text-red-600 text-2xl font-medium">
+                    {error}
+                </div>
+            </div>
+        );
+    }
+
+    // // Prepare chart data
+    // const summaryData = [
+    //     { name: "Total Purchase", value: data!.totalPurchase || 0 },
+    //     { name: "Total Paid", value: data!.totalPaid || 0 },
+    //     { name: "Total Due", value: data!.totalDue || 0 },
+    //     { name: "Cashback Paid", value: data!.totalCashbackPaid || 0 },
+    // ];
+    //
+    // const pieData = [
+    //     { name: "Paid", value: data!.totalPaid || 0 },
+    //     { name: "Due", value: data!.totalDue || 0 },
+    // ];
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+                {/* Header */}
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-emerald-800 mb-4 tracking-tight">
+                        Dashboard Overview
+                    </h1>
+                    <p className="text-lg text-emerald-700/80">
+                        Real-time insights into purchases, payments & cashback
+                    </p>
+                </div>
+
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <StatCard
+                        title="Total Purchase"
+                        value={`৳${data!.totalPurchase.toLocaleString()}`}
+                        icon="🛒"
+                        color="emerald"
+                    />
+                    <StatCard
+                        title="Total Paid"
+                        value={`৳${data!.totalPaid.toLocaleString()}`}
+                        icon="💸"
+                        color="teal"
+                    />
+                    <StatCard
+                        title="Total Due"
+                        value={`৳${data!.totalDue.toLocaleString()}`}
+                        icon="⚠️"
+                        color="amber"
+                    />
+                    <StatCard
+                        title="Paid %"
+                        value={`${data!.paidPercent.toFixed(1)}%`}
+                        icon="📈"
+                        color="green"
+                    />
+                </div>
+
+                {/*/!* Charts Grid *!/*/}
+                {/*<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">*/}
+                {/*    /!* Bar Chart *!/*/}
+                {/*    <div className="bg-white rounded-2xl shadow-xl border border-emerald-100 p-6">*/}
+                {/*        <h2 className="text-xl font-bold text-emerald-800 mb-6">*/}
+                {/*            Financial Overview*/}
+                {/*        </h2>*/}
+
+                {/*        <div className="h-[400px]">*/}
+                {/*            <ResponsiveContainer width="100%" height="100%">*/}
+                {/*                <BarChart*/}
+                {/*                    data={summaryData}*/}
+                {/*                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}*/}
+                {/*                >*/}
+                {/*                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />*/}
+                {/*                    <XAxis dataKey="name" stroke="#6b7280" />*/}
+                {/*                    <YAxis stroke="#6b7280" />*/}
+                {/*                    <Tooltip*/}
+                {/*                        formatter={(value) => `৳${Number(value).toLocaleString()}`}*/}
+                {/*                    />*/}
+                {/*                    <Legend />*/}
+                {/*                    <Bar*/}
+                {/*                        dataKey="value"*/}
+                {/*                        fill="#10b981"*/}
+                {/*                        name="Amount (৳)"*/}
+                {/*                        radius={[8, 8, 0, 0]}*/}
+                {/*                    />*/}
+                {/*                </BarChart>*/}
+                {/*            </ResponsiveContainer>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+
+                {/*    /!* Pie Chart *!/*/}
+                {/*    <div className="bg-white rounded-2xl shadow-xl border border-emerald-100 p-6">*/}
+                {/*        <h2 className="text-xl font-bold text-emerald-800 mb-6">*/}
+                {/*            Paid vs Due*/}
+                {/*        </h2>*/}
+
+                {/*        <div className="h-[400px]">*/}
+                {/*            <ResponsiveContainer width="100%" height="100%">*/}
+                {/*                <PieChart>*/}
+                {/*                    <Pie*/}
+                {/*                        data={pieData}*/}
+                {/*                        cx="50%"*/}
+                {/*                        cy="50%"*/}
+                {/*                        innerRadius={70}*/}
+                {/*                        outerRadius={110}*/}
+                {/*                        dataKey="value"*/}
+                {/*                        label={({ name, percent }) =>*/}
+                {/*                            `${name} ${(percent * 100).toFixed(0)}%`*/}
+                {/*                        }*/}
+                {/*                    >*/}
+                {/*                        {pieData.map((entry, index) => (*/}
+                {/*                            <Cell*/}
+                {/*                                key={`cell-${index}`}*/}
+                {/*                                fill={COLORS[index % COLORS.length]}*/}
+                {/*                            />*/}
+                {/*                        ))}*/}
+                {/*                    </Pie>*/}
+                {/*                    <Tooltip*/}
+                {/*                        formatter={(value) => `৳${Number(value).toLocaleString()}`}*/}
+                {/*                    />*/}
+                {/*                    <Legend />*/}
+                {/*                </PieChart>*/}
+                {/*            </ResponsiveContainer>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+
+                {/* Extra Stats */}
+                <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="bg-white p-6 rounded-2xl shadow-lg border border-emerald-100 text-center">
+                        <p className="text-sm text-gray-600 mb-2">Total Consumers</p>
+                        <p className="text-4xl font-bold text-emerald-700">
+                            {data!.totalConsumers.toLocaleString()}
+                        </p>
+                    </div>
+                    <div className="bg-white p-6 rounded-2xl shadow-lg border border-emerald-100 text-center">
+                        <p className="text-sm text-gray-600 mb-2">Cashback Paid</p>
+                        <p className="text-4xl font-bold text-teal-700">
+                            ৳{data!.totalCashbackPaid.toLocaleString()}
+                        </p>
+                    </div>
+                    <div className="bg-white p-6 rounded-2xl shadow-lg border border-emerald-100 text-center">
+                        <p className="text-sm text-gray-600 mb-2">Avg. Purchase</p>
+                        <p className="text-4xl font-bold text-emerald-700">
+                            ৳
+                            {data!.averagePurchase.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

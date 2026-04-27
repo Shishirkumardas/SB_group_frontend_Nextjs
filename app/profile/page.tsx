@@ -23,7 +23,7 @@ interface UserProfile {
 
 export default function ProfilePage() {
     const router = useRouter();
-    const { userId, role, refreshAuth, isLoading: authLoading } = useAuth();
+    const { userId, refreshAuth, isLoading: authLoading } = useAuth();
 
     const [user, setUser] = useState<UserProfile>({
         id: "",

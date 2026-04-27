@@ -1,10 +1,14 @@
+// components/PaymentCallbackContent.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 
-export default function PaymentCallbackPage() {
+export default function PaymentCallbackContent({ params }: { params: Promise<{ id: string }> }) {
+    const resolvedParams = use(params);
+    const orderId = resolvedParams.id;
+
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -16,7 +20,12 @@ export default function PaymentCallbackPage() {
 
     useEffect(() => {
         const paymentID = searchParams.get("paymentID");
-        const callbackStatus = searchParams.get("status")?.toLowerCase();
+        const callbackStatus = searchParams.get("status")?.toLowerCase() as
+            | "success"
+            | "failure"
+            | "cancel"
+            | null
+            | undefined;
 
         if (!paymentID || !callbackStatus) {
             setStatus("failed");
@@ -42,37 +51,39 @@ export default function PaymentCallbackPage() {
 
     const handleExecutePayment = async (paymentID: string) => {
         try {
-            const res = await fetch(`http://localhost:8080/api/bkash/callback?paymentID=${paymentID}&status=success`, {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            const res = await fetch(
+                `http://localhost:8080/api/bkash/callback?masterDataId=${orderId}&paymentID=${paymentID}&status=success`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
             const data = await res.json();
 
-            // Handle success or "already completed" as success
             if (res.ok && data?.transactionStatus === "Completed") {
                 setStatus("success");
                 setMessage("Payment successful! Thank you for your purchase.");
-                setTrxId(data.trxId || null);
-                setAmount(data.amount || null);
-                // setTimeout(() => {
-                //     router.push("/dashboard"); // or /orders, /profile, etc.
-                // }, 3000);
-            } else if (data?.externalCode === "2062" || data?.errorMessageEn?.includes("already been completed")) {
-                // Treat "already completed" as success
+                setTrxId(data.trxId ?? null);
+                setAmount(data.amount ?? null);
+            } else if (
+                data?.externalCode === "2062" ||
+                data?.errorMessageEn?.includes("already been completed")
+            ) {
                 setStatus("success");
                 setMessage("Payment was already completed successfully!");
-                setTrxId(data.trxId || null);
-                setAmount(data.amount || null);
-                // setTimeout(() => {
-                //     router.push("/dashboard");
-                // }, 3000);
+                setTrxId(data.trxId ?? null);
+                setAmount(data.amount ?? null);
             } else {
                 setStatus("failed");
-                setMessage(data?.errorMessageEn || data?.statusMessage || "Payment verification failed. Please contact support.");
+                setMessage(
+                    data?.errorMessageEn ||
+                    data?.statusMessage ||
+                    "Payment verification failed. Please contact support."
+                );
             }
         } catch (error) {
             console.error("Execute callback error:", error);
@@ -112,13 +123,16 @@ export default function PaymentCallbackPage() {
                     <div className="bg-green-50 border border-green-200 rounded-lg p-5 mb-8 text-left">
                         <p className="text-green-800 font-medium mb-2">Transaction Details:</p>
                         <p className="text-sm text-gray-700">
-                            <strong>Amount:</strong> ৳{amount || "—"}
+                            <strong>Amount:</strong> ৳{amount ?? "—"}
                         </p>
                         <p className="text-sm text-gray-700">
-                            <strong>Transaction ID:</strong> {trxId || "—"}
+                            <strong>Transaction ID:</strong> {trxId ?? "—"}
                         </p>
                         <p className="text-sm text-gray-700">
-                            <strong>Payment ID:</strong> {paymentId || "—"}
+                            <strong>Payment ID:</strong> {paymentId ?? "—"}
+                        </p>
+                        <p className="text-sm text-gray-700">
+                            <strong>Order ID:</strong> {orderId ?? "—"}
                         </p>
                     </div>
                 )}

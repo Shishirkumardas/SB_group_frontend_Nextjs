@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { HeartPulse, GraduationCap, Home, Hotel, Building2, Factory, Palette, Pill, Briefcase } from "lucide-react";
+import { HeartPulse, GraduationCap, Home, Hotel, Building2, Factory, Palette, Pill} from "lucide-react";
 import { ArrowRight } from "lucide-react";
 
 const sisterConcerns = [
