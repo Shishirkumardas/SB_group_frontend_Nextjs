@@ -216,6 +216,80 @@ export default function SBGroupLanding() {
                 </div>
             </section>
 
+            {/* ====================== NEW MEDIA GALLERY ====================== */}
+            <section className="py-20 md:py-28 px-6 bg-emerald-950">
+                <div className="max-w-7xl mx-auto">
+                    <motion.div
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className="text-4xl md:text-5xl font-serif font-bold text-emerald-100 mb-4">
+                            Media Gallery
+                        </h2>
+                        <p className="text-xl text-emerald-300 max-w-2xl mx-auto">
+                            Capturing the spirit of progress, community, and excellence
+                        </p>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[
+                            "/magazine/dealer-program.jpg",
+                            "/magazine/shopping-mall.jpg",
+                            "/magazine/apon_housing.jpg",
+                        ].map((src, index) => (
+                            <motion.div
+                                key={index}
+                                className="group relative overflow-hidden rounded-3xl aspect-[5/7] shadow-2xl border border-emerald-800/50 bg-emerald-950"
+                                initial={{ opacity: 0, y: 60 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.7, delay: index * 0.08 }}
+                                whileHover={{ scale: 1.04, y: -8 }}
+                            >
+                                <img
+                                    src={src}
+                                    alt={`SB Group Gallery ${index + 1}`}
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                />
+
+                                {/* Magazine-style Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                                {/* Bottom Label - Magazine Style */}
+                                <div className="absolute bottom-6 left-6 right-6 text-white">
+                                    <div className="text-emerald-400 text-xs tracking-[2px] uppercase mb-1 font-medium">
+                                        SB GROUP FEATURE
+                                    </div>
+                                    <div className="text-xl font-serif font-bold leading-tight opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-3 group-hover:translate-y-0">
+                                        {index === 0 && "Dealer & Partner Program"}
+                                        {index === 1 && "Modern Shopping Mall"}
+                                        {index === 2 && "Apon Housing Project"}
+                                    </div>
+                                </div>
+
+                                {/* Page Number Effect */}
+                                <div className="absolute top-6 right-6 text-emerald-400/30 text-5xl font-serif font-bold tracking-tighter opacity-0 group-hover:opacity-100 transition-all duration-500">
+                                    0{index + 1}
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    <div className="text-center mt-16">
+                        <Link
+                            href="/media"
+                            className="inline-flex items-center gap-3 text-emerald-400 hover:text-emerald-300 text-lg font-medium transition group"
+                        >
+                            {/*Explore Full Magazine Gallery*/}
+                            {/*<ArrowRight className="group-hover:translate-x-2 transition-transform" />*/}
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
             {/* Stats Section */}
             <section className="py-20 md:py-28 px-6 bg-emerald-900/50">
                 <div className="max-w-7xl mx-auto text-center">
@@ -281,6 +355,58 @@ export default function SBGroupLanding() {
                                 />
                             </div>
                         ))}
+                    </div>
+
+                </div>
+            </section>
+
+            {/* Available Areas Section - Add this BELOW your Shopping Mall Gallery */}
+            <section className="py-16 px-6 bg-white">
+                <div className="max-w-7xl mx-auto">
+
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold text-emerald-950 mb-4">
+                            Our Products Are Available In
+                        </h2>
+                        <p className="text-emerald-700 text-lg max-w-2xl mx-auto">
+                            Find the freshest ingredients in these locations across Bangladesh
+                        </p>
+                    </div>
+
+                    {/* Full-width promotional image */}
+                    <div className="mb-12 rounded-3xl overflow-hidden shadow-2xl border border-emerald-100">
+                        <img
+                            src="/images/available-areas.jpg"
+                            alt="NJBL Products Available Areas - Bangladesh Locations"
+                            className="w-full h-auto object-cover"
+                        />
+                    </div>
+
+                    {/* Optional: Location highlights grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                        <div className="bg-emerald-50 rounded-2xl p-6">
+                            <div className="text-4xl mb-3">🏠</div>
+                            <h4 className="font-semibold text-emerald-900">Dhaka Division</h4>
+                            <p className="text-sm text-emerald-700 mt-1">Dhaka(Baridhara), Motijheel Gazipur(Mawna.kaliakoir), Narayanganj(siddhirganj)</p>
+                        </div>
+
+                        <div className="bg-emerald-50 rounded-2xl p-6">
+                            <div className="text-4xl mb-3">🌊</div>
+                            <h4 className="font-semibold text-emerald-900">Barisal Division</h4>
+                            <p className="text-sm text-emerald-700 mt-1">Barisal, Jhalokathi, vola</p>
+                        </div>
+
+                        <div className="bg-emerald-50 rounded-2xl p-6">
+                            <div className="text-4xl mb-3">🌾</div>
+                            <h4 className="font-semibold text-emerald-900">Khulna Division</h4>
+                            <p className="text-sm text-emerald-700 mt-1">Khulna, Jessore, Kushtia</p>
+                        </div>
+
+                        <div className="bg-emerald-50 rounded-2xl p-6">
+                            <div className="text-4xl mb-3">🏞️</div>
+                            <h4 className="font-semibold text-emerald-900">Rajshahi & Others</h4>
+                            <p className="text-sm text-emerald-700 mt-1">Rajshahi, Tangail, Faridpur, Rangpur</p>
+                        </div>
                     </div>
 
                 </div>
