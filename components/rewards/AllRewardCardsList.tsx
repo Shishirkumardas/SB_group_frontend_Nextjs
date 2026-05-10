@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Loader2, Eye, Trash2 } from 'lucide-react';
+import { Loader2, Eye, Trash2, RefreshCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface RewardCard {
@@ -10,10 +10,10 @@ interface RewardCard {
     cardNumber: string;
     totalPoints: number;
     issuedAt: string;
-    isActive: boolean;
-    customer: {
+    isActive: boolean;           // Make sure this matches backend DTO
+    customer?: {
         id: string;
-        name: string;           // MasterData name
+        name: string;
         phone: string;
     };
 }
@@ -22,23 +22,30 @@ export default function AllRewardCardsList() {
     const [cards, setCards] = useState<RewardCard[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [refreshing, setRefreshing] = useState(false);
     const router = useRouter();
 
-    const fetchAllCards = async () => {
-        setLoading(true);
+    const fetchAllCards = async (showLoading = true) => {
+        if (showLoading) setLoading(true);
+        else setRefreshing(true);
+
         try {
             const res = await fetch('http://localhost:8080/api/rewards/all', {
-                credentials: 'include'
+                credentials: 'include',
+                cache: 'no-store',
             });
+
             if (res.ok) {
                 const data = await res.json();
                 setCards(data);
+            } else {
+                console.error("Failed to fetch cards:", res.status);
             }
         } catch (err) {
             console.error(err);
-            alert("Failed to load reward cards");
         } finally {
             setLoading(false);
+            setRefreshing(false);
         }
     };
 
@@ -48,25 +55,38 @@ export default function AllRewardCardsList() {
 
     const filteredCards = cards.filter(card =>
         card.cardNumber.toLowerCase().includes(search.toLowerCase()) ||
-        card.customer.name.toLowerCase().includes(search.toLowerCase())
+        (card.customer?.name || '').toLowerCase().includes(search.toLowerCase())
     );
 
     return (
         <div className="bg-white rounded-3xl shadow-2xl p-8">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-emerald-800">All Reward Cards</h2>
-                <input
-                    type="text"
-                    placeholder="Search by card number or customer name..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="border border-emerald-300 rounded-2xl px-5 py-3 w-96 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
+
+                <div className="flex items-center gap-4">
+                    <input
+                        type="text"
+                        placeholder="Search by card number or customer name..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="border border-emerald-300 rounded-2xl px-5 py-3 w-96 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+
+                    <button
+                        onClick={() => fetchAllCards(false)}
+                        disabled={refreshing}
+                        className="p-3 hover:bg-emerald-100 rounded-2xl transition-colors"
+                        title="Refresh"
+                    >
+                        <RefreshCw className={`text-emerald-600 ${refreshing ? 'animate-spin' : ''}`} size={22} />
+                    </button>
+                </div>
             </div>
 
             {loading ? (
                 <div className="text-center py-20">
                     <Loader2 className="animate-spin mx-auto text-emerald-600" size={48} />
+                    <p className="mt-4 text-emerald-700">Loading reward cards...</p>
                 </div>
             ) : (
                 <div className="overflow-x-auto">
@@ -82,34 +102,56 @@ export default function AllRewardCardsList() {
                         </tr>
                         </thead>
                         <tbody className="divide-y">
-                        {filteredCards.map((card) => (
-                            <tr key={card.id} className="hover:bg-emerald-50">
-                                <td className="px-6 py-5 font-mono text-emerald-700">{card.cardNumber}</td>
-                                <td className="px-6 py-5 font-medium">{card.customer.name}</td>
-                                <td className="px-6 py-5 text-center">{card.customer.phone}</td>
-                                <td className="px-6 py-5 text-center font-bold text-lg text-emerald-600">
-                                    {card.totalPoints}
-                                </td>
-                                <td className="px-6 py-5 text-center">
-                                    {card.isActive ? (
-                                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Active</span>
-                                    ) : (
-                                        <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">Inactive</span>
-                                    )}
-                                </td>
-                                <td className="px-6 py-5 text-center flex justify-center gap-3">
-                                    <button
-                                        onClick={() => router.push(`/rewards/view/${card.id}`)}
-                                        className="p-2 hover:bg-emerald-100 rounded-xl text-emerald-600"
-                                    >
-                                        <Eye size={20} />
-                                    </button>
-                                    <button className="p-2 hover:bg-red-100 rounded-xl text-red-600">
-                                        <Trash2 size={20} />
-                                    </button>
+                        {filteredCards.length === 0 ? (
+                            <tr>
+                                <td colSpan={6} className="py-12 text-center text-gray-500">
+                                    No reward cards found
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            filteredCards.map((card) => (
+                                <tr key={card.id} className="hover:bg-emerald-50 transition-colors">
+                                    <td className="px-6 py-5 font-mono text-emerald-700">{card.cardNumber}</td>
+                                    <td className="px-6 py-5 font-medium">
+                                        {card.customer?.name || 'N/A'}
+                                    </td>
+                                    <td className="px-6 py-5 text-center">
+                                        {card.customer?.phone || '—'}
+                                    </td>
+                                    <td className="px-6 py-5 text-center font-bold text-lg text-emerald-600">
+                                        {card.totalPoints}
+                                    </td>
+                                    <td className="px-6 py-5 text-center">
+                                        {card.isActive ? (
+                                            <span className="bg-green-100 text-green-700 px-4 py-1.5 rounded-full text-sm font-medium">
+                                                    Active
+                                                </span>
+                                        ) : (
+                                            <span className="bg-red-100 text-red-700 px-4 py-1.5 rounded-full text-sm font-medium">
+                                                    Inactive
+                                                </span>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-5 text-center">
+                                        <div className="flex justify-center gap-3">
+                                            <button
+                                                onClick={() => router.push(`/rewards/view/${card.id}`)}
+                                                className="p-3 hover:bg-emerald-100 rounded-xl text-emerald-600 hover:text-emerald-700 transition-all active:scale-95"
+                                                title="View & Edit"
+                                            >
+                                                <Eye size={22} />
+                                            </button>
+                                            <button
+                                                className="p-3 hover:bg-red-100 rounded-xl text-red-600 hover:text-red-700 transition-all active:scale-95"
+                                                title="Delete"
+                                            >
+                                                <Trash2 size={22} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                         </tbody>
                     </table>
                 </div>
