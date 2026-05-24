@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Loader2, ArrowLeft, Edit3, Save, User, Phone, BadgeCheck, BadgeX, CreditCard, Star, Printer, QrCode } from 'lucide-react';
+import { Loader2, ArrowLeft, Edit3, Save, User, Phone, BadgeCheck, BadgeX, CreditCard, Star, Printer, QrCode, DollarSign } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -101,14 +101,16 @@ export default function RewardCardViewPage() {
             if (form.totalPoints !== card.totalPoints) {
                 const diff = form.totalPoints - card.totalPoints;
                 await fetch(`http://localhost:8080/api/rewards/add-points?cardId=${card.id}&points=${diff}&reason=Manual%20Update`, {
-                    method: 'POST', credentials: 'include'
+                    method: 'POST',
+                    credentials: 'include'
                 });
             }
 
             if (form.isActive !== card.isActive) {
                 const endpoint = form.isActive ? '/activate' : '/deactivate';
                 const res = await fetch(`http://localhost:8080/api/rewards/${card.id}${endpoint}`, {
-                    method: 'PUT', credentials: 'include'
+                    method: 'PUT',
+                    credentials: 'include'
                 });
                 if (!res.ok) throw new Error('Failed to update status');
             }
@@ -131,8 +133,26 @@ export default function RewardCardViewPage() {
 
     const printCard = () => window.print();
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-emerald-600" size={70} /></div>;
-    if (!card) return <div className="min-h-screen flex items-center justify-center text-red-600 text-2xl">Reward Card Not Found</div>;
+    // Navigate to Customer Payments Page
+    const goToCustomerPayments = () => {
+        if (card?.customer?.id) {
+            router.push(`/shopping-mall-customer/${card.customer.id}/payments`);
+        } else {
+            alert("Customer information is not linked to this reward card.");
+        }
+    };
+
+    if (loading) return (
+        <div className="min-h-screen flex items-center justify-center">
+            <Loader2 className="animate-spin text-emerald-600" size={70} />
+        </div>
+    );
+
+    if (!card) return (
+        <div className="min-h-screen flex items-center justify-center text-red-600 text-2xl">
+            Reward Card Not Found
+        </div>
+    );
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-teal-100 p-6 md:p-10">
@@ -141,10 +161,21 @@ export default function RewardCardViewPage() {
                     <Button variant="ghost" onClick={() => router.back()} className="gap-2 text-emerald-700 hover:text-emerald-900">
                         <ArrowLeft size={18} /> Back
                     </Button>
+
                     <div className="flex gap-3">
                         <Button onClick={() => setIsEditing(!isEditing)} className="gap-2 rounded-xl shadow-lg">
                             <Edit3 size={18} /> {isEditing ? 'Close Edit' : 'Edit Card'}
                         </Button>
+
+                        <Button
+                            onClick={goToCustomerPayments}
+                            className="gap-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow-lg"
+                            disabled={!card.customer?.id}
+                        >
+                            <DollarSign size={18} />
+                            View Payment History
+                        </Button>
+
                         <Button onClick={printCard} className="gap-2 bg-emerald-700 hover:bg-emerald-800 rounded-xl shadow-lg">
                             <Printer size={18} /> Print Card
                         </Button>
@@ -182,7 +213,12 @@ export default function RewardCardViewPage() {
                                         <div>
                                             <p className="text-emerald-100 text-lg">Reward Points</p>
                                             {isEditing ? (
-                                                <Input type="number" value={form.totalPoints} onChange={(e) => setForm({ ...form, totalPoints: Number(e.target.value) })} className="mt-4 text-5xl h-20 bg-white text-black font-bold" />
+                                                <Input
+                                                    type="number"
+                                                    value={form.totalPoints}
+                                                    onChange={(e) => setForm({ ...form, totalPoints: Number(e.target.value) })}
+                                                    className="mt-4 text-5xl h-20 bg-white text-black font-bold"
+                                                />
                                             ) : (
                                                 <div className="text-6xl font-black mt-3">{form.totalPoints}</div>
                                             )}
@@ -259,15 +295,13 @@ export default function RewardCardViewPage() {
             {/* ====================== PRINTABLE LANDSCAPE CARD ====================== */}
             <div className="hidden print:block fixed inset-0 bg-white z-[100] p-8 flex items-center justify-center">
                 <div className="w-[720px] h-[380px] border-[14px] border-emerald-800 rounded-3xl overflow-hidden shadow-2xl bg-white relative flex">
-
-                    {/* Left Branding - Now contains NJBL Logo + Card Number */}
+                    {/* Left Branding */}
                     <div className="w-2/5 bg-gradient-to-br from-emerald-700 to-teal-700 p-8 flex flex-col justify-between text-white">
                         <div>
                             <img src="/images/njbl-hero.jpg" alt="NJBL Logo" className="h-14 mb-6" />
                             <div className="text-5xl font-bold tracking-widest">NJBL</div>
                             <p className="text-sm opacity-90 mt-1">SHOPPING MALL</p>
 
-                            {/* Card Number moved here - just after NJBL logo */}
                             <div className="mt-8">
                                 <p className="text-xs opacity-75 tracking-widest">CARD NUMBER</p>
                                 <p className="font-mono text-2xl font-bold tracking-widest mt-1">{card.cardNumber}</p>
@@ -303,7 +337,7 @@ export default function RewardCardViewPage() {
                             </div>
                         </div>
 
-                        {/* QR Code - Top Right Corner */}
+                        {/* QR Code */}
                         {qrUrl && (
                             <div className="absolute top-6 right-6">
                                 <img src={qrUrl} alt="QR Code" className="h-28 w-28 border border-gray-300 rounded-xl shadow" />
@@ -311,7 +345,7 @@ export default function RewardCardViewPage() {
                         )}
                     </div>
 
-                    {/* Barcode - Bottom Center */}
+                    {/* Barcode */}
                     {barcodeUrl && (
                         <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
                             <img src={barcodeUrl} alt="Barcode" className="h-20" />
