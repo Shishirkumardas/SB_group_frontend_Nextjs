@@ -39,7 +39,10 @@ export default function LoginPage() {
             // Redirect based on role
             if (data.role === "ADMIN") {
                 router.push("/dashboard/summary");
-            } else {
+            }
+            if (data.role === "SHOPPING_MALL_MANAGER") {
+                router.push("/ShoppingMallDashboard");
+            }else {
                 router.push("/customer");
             }
 

@@ -70,6 +70,24 @@ export default function ShoppingMallCustomerPage() {
                 throw new Error('Invalid API response');
             }
 
+            const normalizePhone = (phone: any): string => {
+                if (!phone) return 'N/A';
+
+                let cleaned = phone.toString().trim();
+
+                // Remove any existing spaces or dashes for checking
+                cleaned = cleaned.replace(/[\s-]/g, '');
+
+                if (cleaned === '') return 'N/A';
+
+                // Add leading zero if it doesn't have one and looks like a BD phone number
+                if (!cleaned.startsWith('0') && cleaned.length >= 9) {
+                    cleaned = '0' + cleaned;
+                }
+
+                return cleaned;
+            };
+
             const mappedData: Customer[] = data.map((c) => {
                 const due =
                     Number(c?.dueAmount ?? c?.totalDue ?? 0);
@@ -77,7 +95,7 @@ export default function ShoppingMallCustomerPage() {
                 return {
                     id: c?.id ?? '',
                     name: c?.name ?? c?.customerName ?? 'N/A',
-                    phone: c?.phone ?? c?.mobile ?? c?.contactNumber ?? 'N/A',
+                    phone: normalizePhone(c?.phone ?? c?.mobile ?? c?.contactNumber),
                     purchaseAmount: Number(
                         c?.purchaseAmount ?? c?.totalPurchase ?? 0
                     ),
