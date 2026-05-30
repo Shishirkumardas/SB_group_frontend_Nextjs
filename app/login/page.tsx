@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthContext";
@@ -41,7 +41,35 @@ export default function LoginPage() {
                 router.push("/dashboard/summary");
             }
             if (data.role === "SHOPPING_MALL_MANAGER") {
-                router.push("/ShoppingMallDashboard");
+                router.push("/shopping-mall/manager");
+                useEffect(() => {
+                    const restoreMallSelection = async () => {
+                        try {
+                            // Get my malls
+                            const res = await fetch('http://localhost:8080/api/shopping-mall/my-malls', {
+                                credentials: 'include'
+                            });
+
+                            if (res.ok) {
+                                const malls = await res.json();
+                                if (malls.length > 0) {
+                                    // Auto select first mall if none selected
+                                    await fetch('http://localhost:8080/api/shopping-mall/select', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        credentials: 'include',
+                                        body: JSON.stringify({ shoppingMallId: malls[0].id })
+                                    });
+                                    console.log("✅ Mall auto-selected on refresh:", malls[0].name);
+                                }
+                            }
+                        } catch (err) {
+                            console.error("Failed to restore mall selection", err);
+                        }
+                    };
+
+                    restoreMallSelection();
+                }, []);
             }else {
                 router.push("/customer");
             }

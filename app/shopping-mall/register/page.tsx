@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';   // ← Added this
+import { useRouter } from 'next/navigation';
 
 interface ShoppingMallCustomerFormDTO {
     customerName: string;
@@ -17,7 +17,7 @@ interface Area {
 }
 
 const ShoppingMallRegister = () => {
-    const router = useRouter();   // ← Added this
+    const router = useRouter();
 
     const [formData, setFormData] = useState<ShoppingMallCustomerFormDTO>({
         customerName: '',
@@ -30,10 +30,11 @@ const ShoppingMallRegister = () => {
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [customerName, setCustomerName] = useState('');
+    const [error, setError] = useState<string>('');
 
-    // Fetch Areas on load
+    // Fetch Areas
     useEffect(() => {
-        fetch('http://localhost:8080/api/areas')
+        fetch('http://localhost:8080/api/shoppingmall-areas', { credentials: 'include' })
             .then(res => res.json())
             .then(setAreas)
             .catch(err => console.error("Failed to load areas", err));
@@ -49,8 +50,10 @@ const ShoppingMallRegister = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError('');
+
         if (!formData.areaID) {
-            alert("Please select an Area");
+            setError("Please select an Area");
             return;
         }
 
@@ -61,16 +64,20 @@ const ShoppingMallRegister = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
+                credentials: 'include',           // ← Very Important
             });
+
+            const text = await res.text();
 
             if (res.ok) {
                 setCustomerName(formData.customerName);
                 setSubmitted(true);
+                setError('');
             } else {
-                alert('❌ Failed to submit registration');
+                setError(text || 'Failed to submit registration. Please select a mall first.');
             }
         } catch (error) {
-            alert('❌ Something went wrong. Please try again.');
+            setError('Network error. Please check your connection.');
         } finally {
             setLoading(false);
         }
@@ -79,6 +86,7 @@ const ShoppingMallRegister = () => {
     const resetForm = () => {
         setFormData({ customerName: '', phoneNumber: '', nid: '', areaID: 0 });
         setSubmitted(false);
+        setError('');
     };
 
     const goToCustomerData = () => {
@@ -87,7 +95,6 @@ const ShoppingMallRegister = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Header */}
             <header className="bg-green-800 text-white py-6 shadow-lg">
                 <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -111,6 +118,12 @@ const ShoppingMallRegister = () => {
 
                     {!submitted ? (
                         <form onSubmit={handleSubmit} className="p-10 space-y-8">
+                            {error && (
+                                <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-2xl">
+                                    {error}
+                                </div>
+                            )}
+
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">Customer Full Name *</label>
                                 <input
@@ -190,12 +203,11 @@ const ShoppingMallRegister = () => {
                                     Register Another Customer
                                 </button>
 
-                                {/* New Button Added */}
                                 <button
                                     onClick={goToCustomerData}
                                     className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl font-semibold transition"
                                 >
-                                    Customer Data Page
+                                    View Customer Data
                                 </button>
                             </div>
                         </div>

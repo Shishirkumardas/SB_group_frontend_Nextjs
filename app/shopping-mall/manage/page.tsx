@@ -125,7 +125,7 @@ export default function ShoppingMallManagement() {
     // Updated Assign Manager using Email (Query Parameter)
     const assignManager = async () => {
         if (!assignData.email.trim()) {
-            alert("Please enter manager's email address");
+            alert("Please enter manager's email");
             return;
         }
 
@@ -142,13 +142,13 @@ export default function ShoppingMallManagement() {
                 alert('✅ Manager Assigned Successfully!');
                 setShowAssignModal(false);
                 setAssignData({ mallId: 0, email: '' });
-                fetchMyMalls(); // Refresh list
             } else {
-                alert('Failed to assign manager. Please check the email.');
+                const text = await res.text();
+                alert(text || 'Failed to assign manager');
             }
         } catch (err) {
             console.error(err);
-            alert('Error assigning manager');
+            alert('Connection error');
         }
     };
 
